@@ -1,0 +1,69 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title style="color: blue;"> SuperPharma-Historique des Ventes</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'historiquevente.css' %}">
+
+</head>
+<body>
+    {% include "zonee_gauche.html" %}
+
+    <div class="app-content">
+      
+    <div class="container mt-5">
+
+        <form class="d-flex" method="get"  action="{% url 'rechercher_facture' %}" method='get'>
+    
+            <input class="search-bar" placeholder="Recherchez une Facture" type="text" name="produit">
+         </form> 
+        {% if factures %}
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>N° Facture</th>
+                        <th>Client</th>
+                        <th>Date</th>
+                        <th>Montant Total</th>
+                        <th>Produits</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for facture in factures %}
+                    <tr>
+                        <td>{{ facture.id }}</td>
+                        <td>{{ facture.customer.name }}</td>
+                        <td>{{ facture.date_creation|date:"d/m/Y H:i" }}</td>
+                        <td>{{ facture.montant_total }}  {{ parametre.devise }}</td>
+                        <td>
+                            <ul>
+                                {% for vente in facture.ventes.all %}
+                                <li>{{ vente.produit.name }} ({{ vente.quantite }} unités, remise {{ vente.remise }}%)</li>
+                                {% endfor %}
+                            </ul>
+                        </td>
+                        <td style="display: flex;">
+                            <a href="{% url 'details_facture' facture.id %}" class="btn btn-primary btn-sm">Voir détails</a>
+                            {% if is_admin %}
+                            <a href="{% url 'supprimer_facture_vente' facture.pk %}" class="btn btn-danger"> <i class="bi bi-trash3"></i> Supprimer</a>
+                    <span class="hidden">{{ category.pk }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Aucune vente enregistrée pour l'instant.</p>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width =device-wiidth, initial-scale=1.0">
+  <title style="color: blue;"> SuperPharma-Parametre</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'footer.css' %}">
+  <link rel="stylesheet" href="{% static 'menu.css' %}">
+ 
+  
+  <style>
+    body {
+        background-color: azure; 
+        overflow-y: auto;
+        /* Style pour la barre de défilement */
+::-webkit-scrollbar {
+    width: 8px; /* Largeur de la barre de défilement */
+}
+
+/* Style de la piste (fond de la barre) */
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Fond clair */
+    border-radius: 10px; /* Coins arrondis */
+}
+
+/* Style de la poignée de défilement */
+::-webkit-scrollbar-thumb {
+    background-color: #007FFF; /* Couleur bleue azur */
+    border-radius: 10px; /* Coins arrondis */
+    border: 2px solid #f1f1f1; /* Un petit bord pour le contraste */
+}
+
+/* Style au survol de la poignée */
+::-webkit-scrollbar-thumb:hover {
+    background-color: #005f8b; /* Couleur plus foncée au survol */
+}
+
+    
+    }
+    .pharmacy-name {
+        text-align: center;
+        font-size: 2.1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        background: linear-gradient(45deg, #2A9D8F, #F4A261);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: 2px;
+        position: relative;
+        padding: 10px 20px;
+        animation: fadeIn 1.5s ease-in-out;
+    }
+  
+    .pharmacy-name::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        width: 50%;
+        height: 3px;
+        background: #F4A261;
+        transform: translateX(-50%);
+        border-radius: 3px;
+    }
+  
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+  
+    @media screen and (max-width: 768px) {
+        .pharmacy-name {
+            font-size: 2rem;
+        }
+    }
+  </style>
+
+
+
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+
+</head>
+<body >
+
+    <div class="container-fluid px-1 py-5 mx-auto">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+                <h3  class="pharmacy-name" style=" font-weight: 900; font-size: xx-large;">Informations de  pharmaçie {{parametre.name}} </h3>
+                <p class="blue-text" style="color: red; font-weight: 700;";> Veuillez noter <br> ces informations vont s'afficher sur vos doncuments</p>
+                <div class="card" style="padding: 20px; border-radius: 15%;  background-color: antiquewhite;">
+                    <h5 class="text-center mb-4">PHARMACIE</h5>
+                    <form class="form-card" method="POST"  enctype="multipart/form-data"> 
+                       
+                        {% csrf_token %}
+
+                        {% if messages %}
+                            <ul classe ="messages">
+                                {% for message in messages %}
+                                <li {% if message.tags %} class = "{{ message.tags }}" {% endif %} style ="color: red;">
+                                    {{message}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        <div class="row justify-content-between text-left">
+                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">L'adresse<span class="text-danger"> *</span></label>
+                                {{form.adresse}}
+
+                                <div class="text-danger">{{form.adresse.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.adresse %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.adresse}} </p>
+                                   </div>
+                                {% endif %}
+                            
+                            </div>
+                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">La devise<span class="text-danger"> *</span></label>
+                                {{form.devise}}
+
+                                <div class="text-danger">{{form.devise.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.devise %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.devise}} </p>
+                                   </div>
+                                {% endif %}
+                            
+                            </div>
+                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">Regime fiscal<span class="text-danger"> *</span></label>
+                                {{form.fiscal }}
+
+                                <div class="text-danger">{{form.fiscal.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.fiscal  %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.fiscal }} </p>
+                                   </div>
+                                {% endif %}
+                            
+                            </div>
+                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">Le numero<span class="text-danger"> *</span></label>
+                                {{form.numero}}
+
+                                <div class="text-danger">{{form.numero.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.numero %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.numero}} </p>
+                                   </div>
+                                {% endif %}
+                            
+                            </div>
+                            <div class="form-group col-sm-6 flex-column d-flex">
+                                 
+                            <label class="form-control-label px-3">Le nom de de la pharmaçie<span class="text-danger"> *</span></label> 
+                            {{form.name}}
+
+                            <div class="text-danger">{{form.name.errors}}</div>
+                            
+                            
+                            {% comment "" %}<input type="text" id="name" name="name" placeholder="Enterz le nom du produit" onblur="validate(1)"Request> {% endcomment %}
+                                    {% if errors.name %}
+                                    <div class ="error" style="color:red;">
+                                         <p> {{errors.name}} </p>
+                                    </div>
+                                    {% endif %}
+
+                              </div>
+                              <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">L'email<span class="text-danger"> *</span></label>
+                                {{form.email}}
+
+                                <div class="text-danger">{{form.email.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.email %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.email}} </p>
+                                   </div>
+                                {% endif %}
+                            
+                               </div>
+                              <div class="form-group col-sm-6 flex-column d-flex"> 
+                            <span>Pied de page de vos factures</span>
+                              <input type="text" name="remarque" class="form-control" placeholder="Les produits vendus ne sont ni échangés ni remboursés." value="{{ form.remarque.value|default:'' }}">
+                          
+
+                            
+                               </div>
+                            <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Votre logo<span class="text-danger"> *</span></label> 
+                                {{form.logo}}
+
+                                <div class="text-danger">{{form.logo.errors}}</div>
+                            </div> 
+                            
+                        </div>
+                        
+                        
+                        
+                        
+                        <div class="row justify-content-end">
+                            <div class="form-group col-sm-4" style="margin: 1.5rem; ">
+                                <input    style="padding: 0.5rem; border-radius: 15%; " type="submit" class="btn-block btn-primary" value="Enregister" style="text-transform: uppercase;">
+                                 <!--button type="submit" >Enregister</!-button> </div-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-container">
+            <ul class="footer-list">
+                <li><a href="{% url 'acc' %}">Home</a></li>
+                <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+                <li><a href="{% url 'produits' %}">Stocks</a></li>
+                <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+                <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+                <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+                <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+                <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+                <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+                <li><a href="{% url 'notifications' %}">Notifications</a></li>
+            </ul>
+            <div class="footer-account">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+        </div>
+    </div>
+</body>
+
+<script  src="{% static 'script.js' %}"></script>
+<script src="{% static 'menu.js' %}"></script>
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+</html>

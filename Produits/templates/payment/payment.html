@@ -1,0 +1,63 @@
+<!-- payment.html -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement SuperPharma</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1>Paiement de l'abonnement SuperPharma</h1>
+
+    <!-- Formulaire de paiement PayPal -->
+    <form action="{% url 'payment_paypal' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">Payer avec PayPal</button>
+    </form>
+
+    <hr>
+
+    <h3>Ou payer avec carte bancaire</h3>
+    
+    <!-- Formulaire de carte bancaire -->
+    <form action="{% url 'payment_paypal' %}" method="POST">
+        {% csrf_token %}
+        <div>
+            <label for="card_type">Type de carte</label>
+            <select name="card_type" id="card_type">
+                <option value="visa">Visa</option>
+                <option value="mastercard">MasterCard</option>
+            </select>
+        </div>
+
+        <div>
+            <label for="card_number">Numéro de carte</label>
+            <input type="text" name="card_number" id="card_number" required>
+        </div>
+
+        <div>
+            <label for="expiration_month">Mois d'expiration</label>
+            <input type="text" name="expiration_month" id="expiration_month" required>
+        </div>
+
+        <div>
+            <label for="expiration_year">Année d'expiration</label>
+            <input type="text" name="expiration_year" id="expiration_year" required>
+        </div>
+
+        <div>
+            <label for="cvv">Code CVV</label>
+            <input type="text" name="cvv" id="cvv" required>
+        </div>
+
+        <div>
+            <label for="card_holder">Titulaire de la carte</label>
+            <input type="text" name="card_holder" id="card_holder" required>
+        </div>
+
+        <button type="submit">Payer avec carte bancaire</button>
+    </form>
+    
+</body>
+</html>

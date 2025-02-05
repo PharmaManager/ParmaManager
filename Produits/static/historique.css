@@ -1,0 +1,164 @@
+/* Style général */
+body {
+    font-family: 'Arial', sans-serif;
+  
+    color: white;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Empêche le défilement horizontal  */
+}
+
+
+
+/* Barres de défilement personnalisées */
+::-webkit-scrollbar {
+    width: 8px; /* Largeur de la barre de défilement */
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #ff6600;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: #ff9933;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #333;
+    border-radius: 4px;
+}
+
+
+/* Style pour la zone de navigation (partie gauche) */
+.zone-gauche {
+    width: 250px; /* Ajustez la largeur selon vos besoins */
+    height: 100vh; /* Hauteur de la fenêtre */
+    overflow-y: auto; /* Active le défilement vertical */
+    padding-right: 15px; /* Pour éviter que le contenu soit coupé par la barre de défilement */
+}
+
+/* Style pour le contenu principal (partie droite) */
+.container {
+    flex-grow: 1; /* Prend tout l'espace restant */
+    padding: 20px;
+}
+
+/* Header */
+header {
+    
+    text-align: center;
+}
+
+header .app-content-headerButton {
+    background-color: #ff6600;
+    color: white;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+header .app-content-headerButton:hover {
+    background-color: #ff9933;
+}
+
+header a {
+    text-decoration: none;
+}
+
+header i {
+    margin-right: 8px;
+}
+
+
+
+
+
+thead th {
+    color: yellow;
+    font-size: 16px;
+}
+
+tbody tr {
+    background-color: #2d2d2d;
+    border-bottom: 1px solid #444;
+}
+
+tbody tr:hover {
+    background-color: #3d3d3d;
+}
+
+tbody td {
+    color: white;
+}
+
+/* Button Détails */
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-primary:focus {
+    outline: none;
+}
+
+/* Empty State */
+.text-center {
+    color: yellow;
+    font-size: 16px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    header {
+        padding: 10px;
+    }
+
+    table th, table td {
+        font-size: 14px;
+    }
+
+    .app-content-headerButton {
+        font-size: 14px;
+        padding: 8px 15px;
+    }
+
+    .btn-primary {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 18px;
+    }
+
+    table th, table td {
+        padding: 10px 12px;
+        font-size: 12px;
+    }
+
+    .app-content-headerButton {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+
+    .btn-primary {
+        font-size: 12px;
+        padding: 5px 10px;
+    }
+}

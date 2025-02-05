@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block produit %}
+
+<div class="pruducts-area-wrapper tableview">
+    <div class="app-app-content">
+        <div class="container">
+            <div class="row">
+                <div class="col" style="color: aliceblue;">
+
+                    <form action="{% url 'delete' object.uuid object.slug %}" method="post">
+                        {% csrf_token %}
+                        <h1>Vous êtes sur le point de supprimer {{n.name}} , cette action est irreverssible. Voulez vous continuer ?</h1>
+                        <a class="btn btn-outline-warning" href="{% url 'home' %}"> Annuler</a>
+                        <button class="btn btn-outline-danger">Confirmer</button>
+                        
+                    </form>
+                    
+                </div>
+                
+            </div>
+            
+        </div>
+        
+    </div>
+    
+</div>
+  
+{% endblock produit %}

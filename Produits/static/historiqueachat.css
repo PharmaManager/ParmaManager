@@ -1,0 +1,155 @@
+/* Appliquer un texte en blanc sur toute la page */
+body {
+    color: white; /* Texte blanc par défaut */
+    /* Fond sombre pour tout le corps de la page */
+    font-family: Arial, sans-serif; /* Police de base */
+    overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
+    margin: 0;
+    padding: 0;
+}
+
+/* Zone de contenu principal */
+.app-content {
+  
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 100%;
+    overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
+}
+
+/* Style pour les entêtes du tableau */
+th {
+    background-color:#343a40; /* Fond sombre pour les entêtes */
+    color: white; /* Texte blanc pour les entêtes */
+}
+
+td {
+    color: white; /* Texte blanc pour les cellules */
+}
+
+/* Style de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Pour forcer les colonnes à s'ajuster à la taille disponible */
+}
+
+/* Espacement des cellules */
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Lignes alternées du tableau */
+
+
+tbody tr:nth-child(even) {
+    background-color: #444; /* Fond plus sombre pour les lignes paires */
+}
+
+tbody tr:hover {
+    background-color: #666; /* Fond survolé plus clair */
+}
+
+/* Style de la barre de recherche */
+.search-bar {
+    width: 50%;
+    padding: 8px;
+    margin: 20px auto; /* Ajout d'une marge au-dessus de la barre de recherche pour la descendre */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white; /* Texte blanc dans la barre de recherche */
+    background-color: #555; /* Fond sombre pour la barre de recherche */
+    display: block; 
+}
+
+/* Style des actions du tableau (boutons) */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white; /* Texte blanc pour les boutons */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Message d'aucune donnée */
+p {
+    text-align: center;
+    color: white; /* Texte blanc pour les messages */
+    font-size: 18px;
+}
+
+/* Responsivité : Gestion des petits écrans */
+@media (max-width: 1200px) {
+    table {
+        font-size: 14px;
+    }
+
+    .search-bar {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    .search-bar {
+        width: 70%;
+    }
+}
+
+@media (max-width: 576px) {
+    table {
+        font-size: 10px;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+}
+
+/* Style pour le bouton "Effectuer un achat" en haut à droite */
+.app-content-headerButton {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 20px; /* Positionner en haut */
+    right: 20px; /* Positionner à droite */
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+.app-content-headerButton:hover {
+    background-color: #218838;
+}
+
+/* Styles pour l'icône à l'intérieur du bouton */
+.app-content-headerButton i {
+    margin-right: 8px;
+}
+
+

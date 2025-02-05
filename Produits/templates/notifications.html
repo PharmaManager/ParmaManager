@@ -1,0 +1,322 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SuperPharma - Notifications</title>
+    <link rel="stylesheet" href="{% static 'footer.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+           margin-bottom: 3rem;
+        }
+
+        .notification {
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .motivation {
+            background-color: #007bff; /* Couleur de fond bleue */
+            color: white; /* Texte en blanc */
+            padding: 20px; /* Espacement interne */
+            border-radius: 12px; /* Coins arrondis */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Ombre subtile */
+            font-family: 'Arial', sans-serif; /* Police élégante */
+            font-size: 18px; /* Taille de texte plus grande */
+            font-weight: 600; /* Met le texte en gras pour plus d'impact */
+            margin-bottom: 15px; /* Espacement en bas */
+            display: flex; /* Utilise flexbox pour aligner les éléments */
+            align-items: center; /* Aligne les éléments au centre verticalement */
+            justify-content: center; /* Aligne le texte au centre horizontalement */
+            text-align: center; /* Centrer le texte */
+            transition: all 0.3s ease; /* Transition douce lors des changements */
+        }
+        
+        .motivation:hover {
+            background-color: #0056b3; /* Couleur légèrement plus foncée au survol */
+            transform: translateY(-2px); /* Légère élévation au survol */
+        }
+
+        .expirant {
+            background-color: #d9534f; /* Rouge vif pour périmé */
+            color: white;
+        }
+
+        body .proche-expiration {
+            background-color: #f44336; /* Rouge plus doux pour proche expiration */
+            color: white;
+        }
+
+        .stock-min {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .notification-button {
+            padding: 8px 12px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .notification-button:hover {
+            background-color: #218838;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 15px;
+            position: fixed;
+            top: 10px;
+            width: 100%;
+            z-index: 1000;
+            background-color: #fff;
+            padding: 10px;
+            gap: 50rem;
+        }
+
+        .actions .recharger {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .fixed-buttons {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .group-actions {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        @media (max-width: 768px) {
+            .notification {
+                flex-direction: column;
+            }
+
+            .actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+        
+
+@media (max-width: 768px) {
+    .actions {
+        display: flex;
+        gap: 0rem;
+        z-index: 0;
+        position: relative;
+    }
+    .actions .recharger {
+            background-color: #007bff;
+            color: #fff;
+            margin-left: 250px;
+            display: none;
+        }
+body {
+    margin-bottom: 500000px;
+}
+}
+    </style>
+</head>
+<body>
+<div class="container mt-4">
+    <h1 class="text-center">Notifications</h1>
+
+    <!-- Actions fixes en haut -->
+    <div class="actions">
+        <button type="button" class="btn btn-secondary" onclick="selectAllNotifications()">Sélectionner tout</button>
+        <button class="btn btn-info recharger" onclick="window.location.reload();">Recharger</button>
+    </div>
+
+    {% if notifications_by_date %}
+        <form method="POST" action="{% url 'notifications' %}">
+            {% csrf_token %}
+            <div id="notifications-container">
+                {% for date, notifications in notifications_by_date.items %}
+                    <h3 class="mt-4">{{ date }}</h3>
+
+                    <!-- Actions pour sélectionner toutes les notifications d'un groupe -->
+                    <div class="group-actions">
+                        <button type="button" class="btn btn-secondary" onclick="selectGroupNotifications('{{ date }}')">Sélectionner tout</button>
+                    </div>
+
+                    <ul class="list-group">
+                        {% for notification in notifications %}
+                            {% if not notification.is_lu %}
+                                <li class="list-group-item notification {% if notification.type == 'motivation' %}motivation{% elif notification.type == 'expirant' %}expirant{% elif notification.type == 'proche_expiration' %}proche-expiration{% elif notification.type == 'stock_minimum' %}stock-min{% endif %}" data-date="{{ date }}">
+                                    <div>
+                                        <strong>{{ notification.type|capfirst }}</strong>: {{ notification.message }}
+                                    </div>
+                                    <input type="checkbox" name="notification_ids" value="{{ notification.id }}" class="notification-checkbox">
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+            <div class="fixed-buttons">
+                <button type="submit" class="btn btn-primary">Marquer comme lues</button>
+            </div>
+        </form>
+    {% else %}
+        <div class="alert alert-info text-center">Aucune notification non lue pour le moment.</div>
+    {% endif %}
+</div>
+
+<div class="footer">
+    <div class="footer-container">
+        <ul class="footer-list">
+            <li><a href="{% url 'acc' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+            <li><a href="{% url 'produits' %}">Stocks</a></li>
+            <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+            <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+            <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+            <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+            <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+            <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+            <li><a href="{% url 'notifications' %}">Notifications</a></li>
+            {% if is_admin %}
+            <li><a href="{% url 'admin_dashboard' %}">Administrateur</a></li>
+            {% endif %}
+        </ul>
+        <div class="footer-account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+</div>
+
+<script>
+    function selectAllNotifications() {
+        document.querySelectorAll('.notification-checkbox').forEach(checkbox => checkbox.checked = true);
+    }
+
+    function selectGroupNotifications(date) {
+        document.querySelectorAll(`#notifications-container li[data-date="${date}"] .notification-checkbox`).forEach(checkbox => checkbox.checked = true);
+    }
+
+    // Fonction pour marquer les notifications comme lues et éviter le simple rafraîchissement
+    const form = document.querySelector('form');
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        const selectedNotifications = [];
+        document.querySelectorAll('.notification-checkbox:checked').forEach(checkbox => {
+            selectedNotifications.push(checkbox.value);
+        });
+    
+        if (selectedNotifications.length > 0) {
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', document.querySelector('[name="csrfmiddlewaretoken"]').value);
+            selectedNotifications.forEach(id => {
+                formData.append('notification_ids[]', id);
+            });
+    
+            fetch("{% url 'marquer_notifications_lues' %}", {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "Notifications marquées comme lues") {
+                    // Mise à jour de l'interface utilisateur : Supprimer les notifications lues
+                    data.updated_notifications.forEach(notification => {
+                        // Trouver l'élément de notification correspondant
+                        const notificationItem = document.querySelector(`.notification-checkbox[value="${notification.id}"]`).closest('.notification');
+                        if (notificationItem) {
+                            // Supprimer l'élément du DOM (cacher)
+                            notificationItem.style.display = 'none';
+                        }
+                    });
+                    alert('Notifications marquées comme lues');
+                } else {
+                    alert(data.error);
+                }
+            })
+            .catch(error => console.error('Erreur:', error));
+        } else {
+            alert('Veuillez sélectionner des notifications à marquer comme lues.');
+        }
+    });
+    
+
+    // Fonction pour charger les notifications via AJAX toutes les 3 minutes
+    function loadNotifications() {
+        fetch("{% url 'notifications' %}", {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const notificationsContainer = document.getElementById("notifications-container");
+            notificationsContainer.innerHTML = ""; // Effacer les anciennes notifications
+
+            // Tri et affichage des notifications par date
+            let groupedNotifications = {};
+
+            data.notifications.forEach(notification => {
+                const date = new Date(notification.date_creation).toLocaleDateString();
+                if (!groupedNotifications[date]) {
+                    groupedNotifications[date] = [];
+                }
+                groupedNotifications[date].push(notification);
+            });
+
+            // Affichage des notifications par date
+            for (const [date, notifications] of Object.entries(groupedNotifications)) {
+                const dateGroup = document.createElement('div');
+                dateGroup.innerHTML = `<h3 class="mt-4">${date}</h3><ul class="list-group">`;
+                notifications.forEach(notification => {
+                    const notificationItem = document.createElement('li');
+                    notificationItem.classList.add('list-group-item', 'notification');
+                    if (notification.type === 'motivation') {
+                        notificationItem.classList.add('motivation');
+                    } else if (notification.type === 'expirant') {
+                        notificationItem.classList.add('expirant');
+                    } else if (notification.type === 'proche_expiration') {
+                        notificationItem.classList.add('proche-expiration');
+                    } else if (notification.type === 'stock_minimum') {
+                        notificationItem.classList.add('stock-min');
+                    }
+                    notificationItem.innerHTML = `<div><strong>${notification.type | capitalize}</strong>: ${notification.message}</div><input type="checkbox" name="notification_ids" value="${notification.id}" class="notification-checkbox">`;
+                    dateGroup.querySelector('ul').appendChild(notificationItem);
+                });
+                notificationsContainer.appendChild(dateGroup);
+            }
+        })
+        .catch(error => console.error('Erreur AJAX:', error));
+    }
+
+    // Appel de la fonction toutes les 3 minutes (180000 ms)
+    setInterval(loadNotifications, 180000); // 3 minutes
+</script>
+</body>
+</html>

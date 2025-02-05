@@ -1,0 +1,154 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title> SuperPharma -Bon de Commande</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'footer.css' %}">
+    <style>
+        .container {
+            margin-top: 30px;
+        }
+        .produit-row {
+            margin-bottom: 15px;
+        }
+        #total-global {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body  style="background-color:  #f0f4f8;" >
+<div class="container">
+    <h2 class="text-center mb-4">Créer un Bon de Commande</h2>
+    <form id="bon-commande-form" method="post">
+        {% csrf_token %}
+        
+        <!-- Messages -->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- Section Client -->
+        <div class="mb-3">
+            <label for="fournisseur" class="form-label">Nom et adresse su fournisseur</label>
+            <input type="text" id="fournisseur" name="fournisseur" class="form-control" required>
+        </div>
+        
+        <!-- Section Produits -->
+        <div id="produits-container">
+            <div class="row produit-row">
+                <div class="col-md-4 mb-3">
+                    <label for="produit_0" class="form-label">Produit</label>
+                    <select name="produit_0" id="produit_0" class="form-control produit-select" required>
+                        <option value="">-- Sélectionnez un produit --</option>
+                        {% for produit in produits %}
+                        <option value="{{ produit.id }}" >{{ produit.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="quantite_0" class="form-label">Quantité</label>
+                    <input type="number" name="quantite_0" id="quantite_0" class="form-control quantite-input" min="1" value="1" required>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <label for="prix_unitaire_0" class="form-label">Prix</label>
+                    <input type="number" name="prix_unitaire_0" id="prix_unitaire_0" class="form-control prix_unitaire-input">
+                </div>
+                
+                <div class="col-md-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" id="add-product" class="btn btn-secondary mb-3">Ajouter un medicament</button>
+        
+        <!-- Total -->
+        <div class="mb-3">
+            <label for="total-global" class="form-label">Montant Total</label>
+            <input type="text" id="total-global" class="form-control" readonly>
+        </div>
+        
+        <button type="submit" class="btn btn-primary"  style="margin-bottom: 15px;">Créer Bon de Commande</button>
+    </form>
+</div>
+<div class="footer">
+    <div class="footer-container">
+        <ul class="footer-list">
+            <li><a href="{% url 'acc' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+            <li><a href="{% url 'produits' %}">Stocks</a></li>
+            <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+            <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+            <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+            <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+            <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+            <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+            <li><a href="{% url 'notifications' %}">Notifications</a></li>
+        </ul>
+        <div class="footer-account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let rowIndex = 1;
+
+        function updateTotal() {
+            let total = 0;
+            $(".produit-row").each(function () {
+                const quantite = parseFloat($(this).find(".quantite-input").val()) || 0;
+                const prix_unitaire = parseFloat($(this).find(".prix_unitaire-input").val()) || 0;
+              
+                total += quantite * prix_unitaire ;
+            });
+            $("#total-global").val(total.toFixed(2));
+        }
+
+        $("#add-product").click(function () {
+            const newRow = $(".produit-row:first").clone();
+            newRow.find("input, select").each(function () {
+                const name = $(this).attr("name");
+                if (name) $(this).attr("name", name.replace(/\d+/, rowIndex));
+                $(this).val($(this).hasClass("quantite-input") ? 1 : "");
+            });
+            newRow.find(".prix_unitaire-input").val("");
+            $("#produits-container").append(newRow);
+            rowIndex++;
+        });
+
+       
+
+        $(document).on("input", ".quantite-input", updateTotal);
+
+        $(document).on("click", ".remove-row", function () {
+            if ($(".produit-row").length > 1) {
+                $(this).closest(".produit-row").remove();
+                updateTotal();
+            } else {
+                alert("Vous ne pouvez pas supprimer cette ligne.");
+            }
+        });
+    });
+</script>
+</body>
+</html>

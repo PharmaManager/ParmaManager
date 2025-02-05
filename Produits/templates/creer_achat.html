@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title> SuperPharma Créer un Achat</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'creeachat.css' %}">
+    <link rel="stylesheet" href="{% static 'footer.css' %}">
+</head>
+<body  style="background-color:  #f0f4f8;" >
+    <div class="container mt-4" style="border-radius: 10%;" >
+        <h2 class="mb-4">Créer un Achat</h2>
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                <div class="alert {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form id="achat-form" method="post">
+            {% csrf_token %}
+            
+            <div class="mb-3">
+                <label for="fournisseur" class="form-label">Fournisseur:</label>
+                <input type="text" name="fournisseur" id="fournisseur" class="form-control" placeholder="Nom et Adress du fournisseur" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="remise_globale" class="form-label">Remise Globale (%):</label>
+                <input type="number" name="remise_globale" id="remise_globale" class="form-control" min="0" max="100" value="0">
+            </div>
+
+            <div id="produits-container" class="mb-4">
+                <div class="produit-row row g-3 align-items-center">
+                    <div class="col-md-4">
+                        <label for="produit_0" class="form-label">medicament</label>
+                        <select name="produit_0" id="produit_0" class="form-select produit-select" required>
+                            <option value="">-- Sélectionnez un medicament --</option>
+                            {% for produit in produits %}
+                                <option value="{{ produit.id }}" >{{ produit.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="quantite_0" class="form-label">Quntité:</label>
+                        <input type="number" name="quantite_0" id="quantite_0" class="form-control quantite-input" value="1" min="1" placeholder="La quantité achété" required>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="remise_0" class="form-label">Remise specifique (%):</label>
+                        <input type="number" name="remise_0" id="remise_0" class="form-control remise-input" value="0" min="0" max="100">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="prix_unitaire_0" class="form-label">Prix d'achat </label>
+                        <input type="number" name="prix_unitaire_0" id="prix_unitaire_0" class="form-control prix-unitaire-input" value="0">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="date_expiration_0" class="form-label">La date d'expiration </label>
+                        <input type="date" name="date_expiration_0" id="date_expiration_0" required>
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-row" class="btn btn-secondary mb-3">Ajouter une ligne</button>
+            <button  style="margin: 5px;" type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+    </div>
+    <div class="footer">
+        <div class="footer-container">
+            <ul class="footer-list">
+                <li><a href="{% url 'acc' %}">Home</a></li>
+                <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+                <li><a href="{% url 'produits' %}">Stocks</a></li>
+                <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+                <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+                <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+                <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+                <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+                <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+                <li><a href="{% url 'notifications' %}">Notifications</a></li>
+            </ul>
+            <div class="footer-account">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+        </div>
+    </div>
+    
+
+    <script>
+        let rowIndex = 1;
+
+        // Ajouter une nouvelle ligne
+        $("#add-row").click(function () {
+            const newRow = $(".produit-row:first").clone();
+            newRow.find("select, input").each(function () {
+                const name = $(this).attr("name");
+                const id = $(this).attr("id");
+                if (name) $(this).attr("name", name.replace(/\d+/, rowIndex));
+                if (id) $(this).attr("id", id.replace(/\d+/, rowIndex));
+                $(this).val("");
+            });
+            newRow.find(".quantite-input").val(1);
+            newRow.find(".remise-input").val(0);
+            newRow.find(".prix-unitaire-input").val(0);
+            newRow.find(".date_expiration-input").val(0);
+            $("#produits-container").append(newRow);
+            rowIndex++;
+        });
+
+        // Mettre à jour le prix unitaire lorsque le produit est sélectionné
+        
+
+        // Supprimer une ligne
+        $(document).on("click", ".remove-row", function () {
+            if ($(".produit-row").length > 1) {
+                $(this).closest(".produit-row").remove();
+            } else {
+                alert("Vous ne pouvez pas supprimer la dernière ligne.");
+            }
+        });
+
+        // Supprime les messages après 5 secondes
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+            const alertMessages = document.querySelectorAll(".alert");
+            alertMessages.forEach(function (message) {
+                message.remove();
+            });
+            }, 10000);
+        });
+  
+    </script>
+</body>
+</html>

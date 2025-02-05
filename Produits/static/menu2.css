@@ -1,0 +1,51 @@
+/* Cacher la sidebar sur les petits écrans */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none; /* Cache la sidebar sur les petits écrans */
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 250px;
+        background-color: #fff;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        padding-top: 20px;
+        overflow-y: auto;
+        transition: transform 0.3s ease-in-out;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+        transform: translateX(0); /* Affiche le menu */
+    }
+
+    .sidebar-list {
+        display: block;
+        padding-left: 0;
+    }
+
+    .sidebar-list-item {
+        display: block;
+        margin: 10px 0;
+    }
+
+    .app-container {
+        margin-left: 0; /* Enlève l'espace de la sidebar */
+    }
+}
+
+/* Style pour l'icône du menu burger */
+@media (max-width: 768px) {
+    .menu-toggle {
+        display: block;
+        font-size: 30px;
+        color: #333;
+        padding: 10px;
+        cursor: pointer;
+        z-index: 1100;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+    }
+}

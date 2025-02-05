@@ -1,0 +1,230 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vente des produits</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+
+    .scroll-container {
+      max-height: 100vh;
+      overflow-y: auto;
+      padding-right: 15px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="scroll-container">
+    <div class="container-fluid px-1 py-5 mx-auto">
+      <div class="row d-flex justify-content-center">
+        <div class="col-xl-10 col-lg-12 col-md-9 col-11 text-center">
+          <h3>Vente des produits</h3>
+          <p class="text-danger">Veuillez noter que tous les champs sont obligatoires</p>
+
+          <div class="card">
+            <h5 class="text-center mb-4">PHARMACIE</h5>
+
+            <form class="form-card" method="POST" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              {% if messages %}
+                <ul class="messages">
+                  {% for message in messages %}
+                    <li {% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: red;">
+                      {{ message }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+
+              <!-- Section pour les produits -->
+              <div id="products-container">
+                <div class="row justify-content-between text-left product-row ligne-generée">
+                  <!-- Produit -->
+                  <div class="form-group col-sm-4 flex-column d-flex">
+                    <label for="produit_{{ forloop.counter }}" class="form-control-label px-3">Produit<span class="text-danger"> *</span></label>
+                    <select name="produit_{{ forloop.counter }}" id="produit_{{ forloop.counter }}" class="form-control">
+                      {% for produit in produits %}
+                        <option value="{{ produit.id }}">{{ produit.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+
+                  <!-- Quantité -->
+                  <div class="form-group col-sm-2 flex-column d-flex">
+                    <label for="quantite_{{ forloop.counter }}" class="form-control-label px-3">Quantité<span class="text-danger"> *</span></label>
+                    <input type="number" name="quantite_{{ forloop.counter }}" id="quantite_{{ forloop.counter }}" class="form-control" min="1" placeholder="Quantité">
+                  </div>
+
+                  <!-- Prix unitaire (lecteur seul) -->
+                  <div class="form-group col-sm-2 flex-column d-flex">
+                    <label class="form-control-label px-3">Prix unitaire</label>
+                    <input type="number" name="price_{{ forloop.counter }}" id="price_{{ forloop.counter }}" class="form-control" readonly>
+                  </div>
+
+                  <!-- Remise spécifique -->
+                  <div class="form-group col-sm-2 flex-column d-flex">
+                    <label for="remise_{{ forloop.counter }}" class="form-control-label px-3">Remise spécifique (%)</label>
+                    <input type="number" name="remise_{{ forloop.counter }}" id="remise_{{ forloop.counter }}" class="form-control" min="0" max="100" placeholder="Remise (%)">
+                  </div>
+
+                  <!-- Supprimer -->
+                  <div class="form-group col-sm-2 flex-column d-flex">
+                    <button type="button" class="btn btn-danger remove-product">Supprimer</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bouton pour ajouter un produit -->
+              <div class="row justify-content-start">
+                <div class="form-group col-sm-4">
+                  <button type="button" id="add-product" class="btn btn-secondary">Ajouter un produit</button>
+                </div>
+              </div>
+
+              <!-- Remise globale -->
+              <div class="row justify-content-between text-left mt-4">
+                <div class="form-group col-sm-4">
+                  <label for="remise_globale" class="form-control-label">Remise globale (%)</label>
+                  <input type="number" name="remise_globale" id="remise_globale" class="form-control" min="0" max="100"  placeholder="Remise globale (%)">
+                </div>
+              </div>
+
+              <!-- Montant total global -->
+              <div class="row justify-content-end">
+                <div class="form-group col-sm-4">
+                  <label for="total-global" class="form-control-label">Montant total global</label>
+                  <input type="number" id="total-global" class="form-control" readonly>
+                </div>
+              </div>
+
+              <!-- Informations client -->
+              <div class="row justify-content-between text-left mt-4">
+                <div class="form-group col-sm-6 flex-column d-flex">
+                  <label for="customer" class="form-control-label px-3">Nom du client<span class="text-danger"> *</span></label>
+                  {{ form.customer }}
+                  <div class="text-danger">{{ form.customer.errors }}</div>
+                </div>
+              </div>
+
+              <!-- Bouton de soumission -->
+              <div class="row justify-content-end mt-4">
+                <div class="form-group col-sm-4">
+                  <input type="submit" class="btn btn-primary btn-block" value="Enregistrer" style="text-transform: uppercase;">
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateGlobalTotal() {
+      let totalGlobal = 0;
+
+      // Calcul du total global avant remise globale
+      document.querySelectorAll('.product-row').forEach(function (row) {
+        const quantityInput = row.querySelector('input[name^="quantite_"]');
+        const priceField = row.querySelector('input[name^="price_"]');
+        const discountField = row.querySelector('input[name^="remise_"]');
+
+        const quantity = parseFloat(quantityInput.value);
+        const price = parseFloat(priceField.value);
+        const discount = parseFloat(discountField.value) || 0;
+
+        if (!isNaN(quantity) && !isNaN(price)) {
+          let totalProduct = price * quantity;
+          // Appliquer la remise spécifique sur chaque produit
+          totalProduct = totalProduct - (totalProduct * (discount / 100));
+          totalGlobal += totalProduct;
+        }
+      });
+
+      // Appliquer la remise globale
+      const globalDiscount = parseFloat(document.getElementById('remise_globale').value) || 0;
+      if (!isNaN(globalDiscount)) {
+        totalGlobal = totalGlobal - (totalGlobal * (globalDiscount / 100));
+      }
+
+      // Mettre à jour le total global
+      document.getElementById('total-global').value = totalGlobal.toFixed(2);
+    }
+
+    document.addEventListener('change', function (event) {
+      if (event.target.matches('select[name^="produit_"]') || event.target.matches('input[name^="quantite_"]') || event.target.matches('input[name^="remise_"]')) {
+        const row = event.target.closest('.product-row');
+        const productSelect = row.querySelector('select[name^="produit_"]');
+        const quantityInput = row.querySelector('input[name^="quantite_"]');
+        const priceField = row.querySelector('input[name^="price_"]');
+        const productId = productSelect.value;
+
+        if (productId) {
+          fetch(`/product-details/${productId}/`)  
+            .then(response => response.json())
+            .then(data => {
+              if (data.error) {
+                alert(data.error);
+              } else {
+                const price = data.price;
+                priceField.value = price.toFixed(2);  
+                updateGlobalTotal();  // Mettre à jour le total global
+              }
+            })
+            .catch(error => {
+              console.error('Erreur:', error);
+              alert('Erreur lors de la récupération des détails du produit.');
+            });
+        }
+      }
+    });
+
+    document.getElementById('add-product').addEventListener('click', function () {
+      let productContainer = document.getElementById('products-container');
+      let productRow = document.querySelector('.product-row');
+      let newRow = productRow.cloneNode(true);
+
+      const newIndex = document.querySelectorAll('.product-row').length;
+
+      newRow.querySelectorAll('input, select').forEach(function (input) {
+        if (input.name) {
+          input.name = input.name.replace(/\d+/, newIndex);
+          input.id = input.id.replace(/\d+/, newIndex);
+        }
+        if (input.type === 'number' || input.type === 'text') {
+          input.value = '';
+        }
+      });
+
+      newRow.classList.remove('ligne-generée');
+      productContainer.appendChild(newRow);
+    });
+
+    document.addEventListener('click', function (event) {
+      if (event.target.classList.contains('remove-product')) {
+        let productRow = event.target.closest('.product-row');
+        if (productRow.classList.contains('ligne-generée')) {
+          alert("Vous ne pouvez pas supprimer cette ligne.");
+        } else {
+          productRow.remove();
+        }
+        updateGlobalTotal();  // Mettre à jour le total global après suppression
+      }
+    });
+
+    // Mettre à jour le total chaque fois que la remise globale change
+    document.getElementById('remise_globale').addEventListener('input', updateGlobalTotal);
+  </script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+/* Réglages généraux */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f7f6;  /* Fond léger pour un look propre */
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+/* Conteneur principal */
+.container {
+    background-color: #fff;  /* Fond blanc pour la zone principale */
+    border-radius: 8px;  /* Coins arrondis */
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* Ombre subtile */
+    margin-top: 30px;
+    max-width: 1200px;
+}
+
+/* Titres */
+h2 {
+    color: #1d4ed8;  /* Bleu vif pour le titre */
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+h3 {
+    color: #2c3e50;  /* Gris foncé pour les sous-titres */
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+/* Paragraphe */
+p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+strong {
+    color: #2c3e50;  /* Gris foncé pour le texte important */
+}
+
+/* Table responsive */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    background-color: transparent;
+    border-collapse: collapse;
+}
+
+/* En-têtes de table */
+.table thead {
+    background-color: #007bff;  /* Bleu vif pour l'en-tête */
+    color: white;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;  /* Bordure subtile */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f8f9fa;  /* Légère alternance de couleurs pour les lignes */
+}
+
+/* Boutons */
+button {
+    background-color: #28a745;  /* Vert pour le bouton */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #218838;  /* Vert foncé au survol */
+}
+
+/* Média Queries pour rendre la page responsive */
+
+/* Petit écran (smartphone) */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    .table th, .table td {
+        font-size: 14px;
+        padding: 8px;
+    }
+
+    button {
+        width: 100%;
+        padding: 12px;
+        font-size: 18px;
+    }
+}
+
+/* Très petit écran (smartphones en portrait) */
+@media (max-width: 480px) {
+    .container {
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    .table th, .table td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    button {
+        font-size: 16px;
+    }
+}

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width =device-wiidth, initial-scale=1.0">
+  <title>Vente des produits</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+ 
+  
+  
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+
+</head>
+<body>
+
+    <div class="container-fluid px-1 py-5 mx-auto">
+        <div class="row d-flex justify-content-center">
+            <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center">
+                <h3>Vente des produits</h3>
+                <p class="blue-text" style="color: red";>Veillez noter que<br>tout les champs sont obligatoires</p>
+                <div class="card">
+                    <h5 class="text-center mb-4">PHARMACIE</h5>
+                    <form class="form-card" method="POST"  enctype="multipart/form-data"> 
+                       
+                        {% csrf_token %}
+
+                        {% if messages %}
+                            <ul classe ="messages">
+                                {% for message in messages %}
+                                <li {% if message.tags %} class = "{{ message.tags }}" {% endif %} style ="color: red;">
+                                    {{message}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        <div class="row justify-content-between text-left">
+                           
+
+                          
+                        <div class="row justify-content-between text-left">
+                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">Le nom du client<span class="text-danger"> *</span></label>
+                                {{form.customer}}
+
+                                <div class="text-danger">{{form.price.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.price %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.price}} </p>
+                                   </div>
+                                {% endif %}
+                            
+                            </div>
+                            <div class="row justify-content-between text-left">
+                                <div class="form-group col-sm-6 flex-column d-flex"> 
+                                    <label class="form-control-label px-3">Remise en pourcentage<span class="text-danger"> *</span></label>
+                                    {{ form.remise }}
+                            
+                                    <div class="text-danger">{{ form.remise.errors }}</div>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">Le quantité du produit<span class="text-danger"> *</span></label> 
+                                {{form.quantite}}
+
+                                <div class="text-danger">{{form.quantite.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="quantite" name="quantite" placeholder="Enterz la quantité du produit" onblur="validate(4)"Request> {% endcomment %}
+                                {% if errors.quantite %}
+                                    <div class ="error" style="color:red;">
+                                        <p> {{errors.quantite}} </p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                            
+                        </div>
+                        
+                        <div class="row justify-content-end">
+                            <div class="form-group col-sm-4">
+                                <input type="submit" class="btn-block btn-primary" value="Enregister" style="text-transform: uppercase;">
+                                 <!--button type="submit" >Enregister</!-button> </div-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script  src="{% static 'script.js' %}"></script>
+
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+</html>

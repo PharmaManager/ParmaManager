@@ -1,0 +1,219 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> SuperPharma -Créer un Devis</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'footer.css' %}">
+    <style>
+        .container {
+            margin-top: 30px;
+        }
+        .produit-row {
+            margin-bottom: 15px;
+        }
+        #total-global {
+            font-weight: bold;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body  style="background-color:  #f0f4f8;"  >
+<div class="container">
+    <h2 class="text-center mb-4">Créer un Devis</h2>
+    <form id="devis-form" method="post">
+        {% csrf_token %}
+        
+        <!-- Messages -->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    <div style="display: flex; gap: 100px;">
+        <!-- Section Client -->
+        <div class="mb-3">
+            <label for="client" class="form-label">Nom du Client</label>
+            <input type="text" id="client" name="client" class="form-control" required>
+        </div>
+        
+        <!-- Section Statut et Date d'expiration -->
+        <div class="mb-3">
+            <label for="statut" class="form-label">Statut du Devis</label>
+            <select id="statut" name="statut" class="form-control" required>
+                <option value="en_cours">En cours</option>
+                <option value="valide">Validé</option>
+                <option value="refuse">Refusé</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="date_expiration" class="form-label">Date d'expiration du devis</label>
+            <input type="date" id="date_expiration" name="date_expiration" class="form-control" required>
+        </div>
+    </div>
+        <div class="mb-3">
+            <label for="remarque" class="form-label">Remarque</label>
+            <textarea id="remarque" name="remarque" class="form-control" rows="3" placeholder="Ajoutez une remarque ou condition de vente (facultatif)"></textarea>
+        </div>
+
+        <!-- Section Produits -->
+        <div id="produits-container">
+            <div class="row produit-row">
+                <div class="col-md-4 mb-3">
+                    <label for="produit_0" class="form-label">Produit</label>
+                    <select name="produit_0" id="produit_0" class="form-control produit-select" required>
+                        <option value="">-- Sélectionnez un medicament --</option>
+                        {% for produit in produits %}
+                        <option value="{{ produit.id }}" data-price="{{ produit.price }}">{{ produit.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="quantite_0" class="form-label">Quantité</label>
+                    <input type="number" name="quantite_0" id="quantite_0" class="form-control quantite-input" min="1" value="1" required>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="prix_unitaire_0" class="form-label">Prix Unitaire</label>
+                    <input type="text" name="prix_unitaire_0" id="prix_unitaire_0" class="form-control prix-unitaire-input" readonly>
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="remise_specifique_0" class="form-label">Remise Spécifique (%)</label>
+                    <input type="number" name="remise_specifique_0" id="remise_specifique_0" class="form-control remise-specifique-input" min="0" max="100" value="0">
+                </div>
+                <div class="col-md-2 mb-3">
+                    <label for="date_expiration_produit_0" class="form-label">Date d'expiration</label>
+                    <input type="date" name="date_expiration_0" id="date_expiration_0" class="form-control date-expiration-input" required>
+                </div>
+                <div class="col-md-1 d-flex align-items-center">
+                    <button type="button" class="btn btn-danger remove-row">Supprimer</button>
+                </div>
+            </div>
+        </div>
+        
+        <button type="button" id="add-product" class="btn btn-secondary mb-3">Ajouter un medicament</button>
+        
+        <!-- Remise Globale -->
+        <div class="mb-3">
+            <label for="remise_globale" class="form-label">Remise Globale (%)</label>
+            <input type="number" id="remise_globale" name="remise_globale" class="form-control remise-globale-input" min="0" max="100" value="0">
+        </div>
+        
+        <!-- Total -->
+        <div class="mb-3">
+            <label for="total-global" class="form-label">Montant Total</label>
+            <input type="text" id="total-global" class="form-control" readonly>
+        </div>
+        
+        <button type="submit" class="btn btn-success" style="margin-bottom: 19px;">Créer Devis</button>
+    </form>
+</div>
+<div class="footer">
+    <div class="footer-container">
+        <ul class="footer-list">
+            <li><a href="{% url 'acc' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+            <li><a href="{% url 'produits' %}">Stocks</a></li>
+            <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+            <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+            <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+            <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+            <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+            <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+            <li><a href="{% url 'notifications' %}">Notifications</a></li>
+        </ul>
+        <div class="footer-account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+</div>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let rowIndex = 1;
+
+        function updateTotal() {
+            let total = 0;
+            let remiseGlobale = parseFloat($("#remise_globale").val()) || 0;  // Remise globale
+
+            // Calcul du total avant remise globale
+            $(".produit-row").each(function () {
+                const quantite = parseFloat($(this).find(".quantite-input").val()) || 0;
+                const price = parseFloat($(this).find(".prix-unitaire-input").val()) || 0;
+                const remiseSpecifique = parseFloat($(this).find(".remise-specifique-input").val()) || 0;
+
+                // Appliquer la remise spécifique sur chaque produit
+                total += quantite * price * (1 - remiseSpecifique / 100);
+            });
+
+            // Appliquer la remise globale au total
+            total = total * (1 - remiseGlobale / 100);
+
+            // Affichage du total
+            $("#total-global").val(total.toFixed(2));
+        }
+
+        // Lorsque l'utilisateur ajoute un produit
+        $("#add-product").click(function () {
+            const newRow = $(".produit-row:first").clone();
+            newRow.find("input, select").each(function () {
+                const name = $(this).attr("name");
+                if (name) $(this).attr("name", name.replace(/\d+/, rowIndex));
+                $(this).val($(this).hasClass("quantite-input") ? 1 : "");
+               
+                
+              //   NOUVEAU  Réinitialiser les valeurs avec des valeurs par défaut
+            if ($(this).hasClass("quantite-input")) {
+                $(this).val(1); // Quantité par défaut : 1
+            } else if ($(this).hasClass("remise-specifique-input")) {
+                $(this).val(0); // Remise par défaut : 0
+            } else {
+                $(this).val(""); // Réinitialiser les autres champs
+            }
+            });
+            newRow.find(".prix-unitaire-input").val("");
+            $("#produits-container").append(newRow);
+            rowIndex++;
+            updateTotal();
+        });
+
+        // Lorsqu'un produit est sélectionné
+        $(document).on("change", ".produit-select", function () {
+            const price = $(this).find(":selected").data("price");
+            $(this).closest(".produit-row").find(".prix-unitaire-input").val(price);
+            updateTotal();
+        });
+
+        // Lorsqu'une quantité ou une remise individuelle est modifiée
+        $(document).on("input", ".quantite-input, .remise-specifique-input", updateTotal);
+
+        // Lorsque la remise globale est modifiée
+        $(document).on("input", "#remise_globale", updateTotal);
+
+        // Suppression de la ligne produit
+        $(document).on("click", ".remove-row", function () {
+            if ($(".produit-row").length > 1) {
+                $(this).closest(".produit-row").remove();
+                updateTotal();
+            } else {
+                alert("Vous ne pouvez pas supprimer cette ligne.");
+            }
+        });
+    });
+</script>
+</body>
+</html>

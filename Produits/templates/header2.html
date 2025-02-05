@@ -1,0 +1,54 @@
+
+{% block header2 %}
+  
+
+<div class="app-content-actions">
+  <div class="haut" style="display: flex; gap: 2rem;">
+  <form class="d-flex" action="{% url 'recherche' %}" method='get'>
+    
+    <input class="search-bar" placeholder="Recherchez un medicament" type="text" name="produit">
+  </form> 
+  <div style="color: #fff; background-color: blue; border-radius: 12%; padding: 5px;" id="heure">
+    <p><strong>Heure actuelle :</strong> <span id="date-time"></span> </strong></p>
+  </div>
+</div>
+    <div class="app-content-actions-wrapper" >
+      <div class="filter-button-wrapper" style="display: none;">
+        <button class="action-button filter jsFilter"><span>Filter</span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-filter"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg></button>
+        <div class="filter-menu" >
+          
+          
+
+        </div>
+      </div>
+      <button class="action-button list active" title="List View">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-list"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+      </button>
+      <button class="action-button grid" title="Grid View">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      </button>
+    </div>
+  </div>
+  <script>
+    // Fonction pour afficher la date et l'heure actuelles
+    function afficherDateHeure() {
+        const dateActuelle = new Date();
+        const options = { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric', 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit', 
+            hour12: false 
+        };
+        document.getElementById('date-time').textContent = dateActuelle.toLocaleString('fr-FR', options);
+    }
+
+    // Afficher immédiatement
+    afficherDateHeure();
+
+    // Mettre à jour l'heure toutes les secondes
+    setInterval(afficherDateHeure, 1000);
+</script>
+{% endblock header2 %}

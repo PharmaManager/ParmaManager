@@ -1,0 +1,143 @@
+/* Styles généraux */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+    color: #333;
+}
+
+/* Conteneur principal */
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Titre */
+h2 {
+    text-align: center;
+    color: #444;
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+/* Formulaire */
+form {
+    width: 100%;
+}
+
+form .mb-3, .produit-row {
+    display: flex;
+    flex-wrap: nowrap; /* Empêche le retour à la ligne */
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center; /* Aligne verticalement au centre */
+}
+
+form label {
+    font-weight: bold;
+    color: #555;
+    min-width: 150px; /* Fixer une largeur minimale pour les labels */
+    white-space: nowrap; /* Empêche le retour à la ligne du texte */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Gère les longs textes avec des points de suspension */
+}
+
+form input, form select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #0056b3;
+}
+
+/* Ligne produit */
+.produit-row {
+    flex-wrap: nowrap; /* Forcer tout sur une seule ligne */
+    gap: 10px;
+}
+
+.produit-row > div {
+    flex: 1; /* Équilibre la largeur des champs */
+    min-width: 150px; /* Largeur minimale pour éviter l'écrasement */
+}
+
+.produit-row .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 8px 12px;
+    padding-top: 10px;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    white-space: nowrap; /* Empêche les retours à la ligne */
+}
+
+.produit-row .btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Boutons */
+#add-row {
+    display: block;
+    width: auto;
+    margin: 0 auto 20px;
+    text-align: center;
+}
+
+/* Messages */
+.alert {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.alert.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsivité */
+@media (max-width: 768px) {
+    .produit-row {
+        flex-wrap: wrap; /* Permet le retour à la ligne sur petits écrans */
+    }
+
+    .produit-row > div {
+        flex: 1 1 100%; /* Prend toute la largeur sur mobile */
+    }
+
+    form button {
+        width: 100%;
+    }
+}

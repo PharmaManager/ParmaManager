@@ -1,0 +1,169 @@
+/* Structure de base pour le tableau */
+.products-area-wrapper.tableView {
+    overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.products-header, .products-row {
+    display: flex;
+    flex-wrap: wrap; /* Permet aux éléments de se décaler sans se chevaucher */
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.product-cell {
+    flex: 1 1 150px; /* Assure que les cellules prennent de l'espace et se redimensionnent selon le contenu */
+    padding: 10px;
+    border: 1px solid #ddd;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+/* Styles supplémentaires pour les cellules spécifiques */
+.product-cell.image {
+    flex: 0 0 100px;
+}
+
+.product-cell.category, .product-cell.sales, .product-cell.stock, .product-cell.price, .product-cell.status-cell {
+    flex: 1 1 200px; /* Les cellules peuvent s'étirer selon leur contenu */
+}
+
+.product-cell img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.lotdate {
+    flex: 1 1 250px;
+    padding-left: 10px;
+}
+
+.lotdate p {
+    margin: 0;
+}
+
+.button {
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-align: center;
+    color: white;
+}
+
+.red {
+    background-color: red;
+}
+
+.yellow {
+    background-color: yellow;
+}
+
+.green {
+    background-color: green;
+}
+
+.lotdate {
+    color: #fff;
+}
+
+/* Assurer l'alignement des actions */
+.product-cell.price {
+    flex: 1 1 120px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 5px;
+}
+
+.product-cell.stock {
+    flex: 2 1 300px; /* Plus large pour accueillir de longues descriptions */
+    white-space: pre-wrap; /* Autorise les retours à la ligne pour les textes longs */
+    overflow-wrap: break-word; /* Divise les mots longs si nécessaire */
+    text-align: center; /* Alignement à gauche pour une meilleure lisibilité */
+    padding: 1px;
+}
+
+/* Limiter la hauteur de la description pour afficher seulement quelques lignes */
+.product-cell.stock {
+    max-height: 4.8em; /* Limite à 3 lignes de texte */
+    overflow: hidden;
+    position: relative;
+    line-height: 1.6rem;
+    padding-right: 20px; /* Ajout d'un padding pour éviter que le texte touche la bordure */
+}
+
+/* Cacher la partie débordée de la description */
+.product-cell.stock .more {
+    display: none;
+    color: blue;
+    cursor: pointer;
+    font-size: 14px;
+    position: absolute;
+    bottom: 5px;
+}
+
+/* Lorsque la cellule de description est dépliée, on affiche tout */
+.product-cell.stock.expanded {
+    max-height: none;
+}
+
+/* Lorsque la description est dépliée, on affiche le lien "Moins" */
+.product-cell.stock.expanded .more {
+    display: inline;
+    color: red; /* Couleur du lien "Moins" */
+}
+
+/* Bouton "Plus" pour ouvrir la description */
+.product-cell.stock .more.plus {
+    color: blue; /* Couleur du lien "Plus" */
+}
+
+/* Responsive design */
+@media (max-width: 1200px) {
+    .product-cell {
+        flex: 1 1 150px; /* Adapte la taille des cellules */
+    }
+
+    .lotdate {
+        flex: 1 1 100%; /* Les informations sur les lots prennent toute la largeur */
+    }
+}
+
+@media (max-width: 768px) {
+    .products-header, .products-row {
+        flex-direction: column;
+    }
+
+    .product-cell {
+        flex: 1 1 100%; /* Chaque cellule prend la largeur entière de l'écran */
+    }
+
+    .product-cell.image img {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-cell {
+        flex: 1 1 100%; /* Les cellules prennent toute la largeur sur les petits écrans */
+    }
+
+    .lotdate {
+        font-size: 12px; /* Réduit la taille de la police pour les petits écrans */
+    }
+
+    .product-cell.price {
+        flex: 1 1 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-cell.stock {
+        flex: 1 1 100%; /* La description prend toute la largeur */
+        font-size: 14px; /* Réduit légèrement la taille de la police */
+    }
+}

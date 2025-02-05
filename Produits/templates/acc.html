@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Ajouter Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+<link rel="stylesheet" href="{% static 'abonnement.css' %}">
+  <title>Accueil SuperPharma</title>
+  <style>
+    :root {
+      --primary-color: #2a9d8f;
+      --secondary-color: #264653;
+      --background-color: #f0f4f8;
+      --text-color: #333;
+      --button-color: #e76f51;
+      --button-hover: #d64f39;
+      --border-radius: 8px;
+      --footer-bg-color: #264653;
+      --footer-text-color: #fff;
+    }
+  
+    /* Style général du body */
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+  
+    /* Style pour le message d'abonnement */
+    .alert-custom, .essai-message {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #ffeb3b;
+      color: #333;
+      padding: 15px 30px;
+      border-radius: var(--border-radius);
+      font-size: 18px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 80%;
+      max-width: 500px;
+      z-index: 9999;
+      margin-bottom: 10px;
+      transition: all 0.3s ease;
+    }
+  
+    .alert-custom a, .essai-message a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+  
+    .alert-custom a:hover, .essai-message a:hover {
+      color: var(--button-color);
+    }
+  
+    /* Message d'essai gratuit (centré verticalement) */
+    .essai-message {
+      
+      top: 50%; /* Centrer verticalement */
+      transform: translate(-50%, -50%);
+      background-color: #f06292;
+      color: #ffffff;
+     
+      font-size: 16px;
+      text-align: center;
+      display: block;
+      padding: 15px 20px;
+      width: 80%;
+      z-index: -9999;
+    }
+  
+    .essai-message a {
+      color: white;
+      font-weight: bold;
+    }
+  
+    /* Pour écran mobile et petits écrans */
+    @media (max-width: 768px) {
+      /* Sur petit écran, empiler les messages */
+      .alert-custom, .essai-message {
+        width: 90%;
+        font-size: 16px;
+        padding: 12px 20px;
+        margin-bottom: 10px;
+      }
+  
+      /* Décalage des messages quand ils sont empilés */
+      .alert-custom, .essai-message {
+        margin-top: 10px;
+      }
+  
+      .alert-custom.bottom, .essai-message.bottom {
+        top: auto;
+        bottom: 20px; /* Les déplacer en bas pour éviter de cacher d'autres contenus */
+      }
+    }
+  
+    /* Pour les grands écrans (aligner côte à côte) */
+    @media (min-width: 768px) {
+      /* Alignement côte à côte sur grands écrans */
+      .messages-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+      }
+  
+      .alert-custom, .essai-message {
+        margin-top: 0;
+        width: auto;
+        max-width: 45%;
+      }
+    }
+  
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      text-align: center;
+      color: var(--secondary-color);
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+
+    .intro-text {
+      font-size: 20px;
+      text-align: center;
+      color: var(--secondary-color);
+      margin-bottom: 40px;
+      opacity: 1;
+      transition: opacity 1s ease;
+      line-height: 1.7;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .features {
+      
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .feature {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        padding: 10px;
+        margin: 10px;
+        width: 100%;
+        max-width: 350px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        transition: transform 0.3s ease-in-out;
+      }
+      
+      .feature:hover {
+        transform: scale(1.05);
+      }
+      
+      .feature i {
+        margin-right: 10px;
+      }
+      
+      .feature-text {
+        font-size: 16px;
+      }
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .button {
+      background-color: var(--button-color);
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      padding: 12px 24px;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      width: 100%;
+      max-width: 350px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: var(--button-hover);
+    }
+
+    .footer {
+      background-color: var(--footer-bg-color);
+      color: var(--footer-text-color);
+      padding: 20px 0;
+      width: 100%;
+      margin-top: auto;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+     
+    }
+
+    .footer-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: center;
+   
+    }
+
+    .footer-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .footer-list li {
+      margin-right: 15px;
+    }
+
+    .footer-list a {
+      text-decoration: none;
+      color: var(--footer-text-color);
+      font-size: 14px;
+      transition: color 0.3s;
+    }
+
+    .footer-list a:hover {
+      color: var(--primary-color);
+    }
+
+    .footer-account a {
+      text-decoration: none;
+      color: var(--footer-text-color);
+      font-size: 14px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    #toggle-button {
+        position: relative; /* Par défaut, le bouton reste en position normale */
+        transition: position 0.5s ease; /* Transition douce pour le changement de position */
+    }
+
+    .buttons.start-button {
+        display: none;
+      }
+
+    /* Responsiveness */
+    @media screen and (max-width: 480px) {
+      .container {
+        padding: 15px;
+      }
+
+      .title {
+        font-size: 20px;
+      }
+
+      .subtitle {
+        font-size: 16px;
+      }
+
+      .feature {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .feature img {
+        margin-bottom: 10px;
+      }
+
+      .feature-text {
+        font-size: 14px;
+      }
+
+      .button {
+        font-size: 14px;
+        padding: 10px 20px;
+      }
+
+      .footer-list {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .footer-list li {
+        margin: 5px 0;
+      }
+    }
+
+    @media screen and (min-width: 768px) {
+      /* Show "Commencer" only on larger screens */
+      .buttons.start-button {
+        display: block;
+        margin-top: -30px;
+        margin-bottom: 60px;
+      }
+    } 
+
+  
+  </style>
+</head>
+<body>
+
+
+
+  <div class="container">
+    <div class="title">Bienvenue sur SuperPharma</div>
+    <div class="subtitle">Optimisez la gestion de votre pharmacie avec SuperPharma .</div>
+    
+    <div class="messages-container">
+
+    {% if message_abonnement %}
+    <div class="alert-custom">
+        {{ message_abonnement }}
+        <a href="{% url 'paypal_checkout' %}">Renouveler maintenant</a>
+    </div>
+   {% endif %}
+   <div id="message-abonnement"></div>
+  </div>
+    <div class="intro-text" id="intro-text" >
+      Découvrez comment SuperPharma peut transformer la gestion de votre pharmacie en un jeu d'enfant. Grâce à des outils puissants et intuitifs, suivez les stocks, gérez les ventes, créez des devis et bien plus encore !
+    </div>
+
+    <div class="buttons" id="toggle-button">
+      <a href="javascript:void(0);" onclick="toggleFeatures()">
+        <button class="button">Voir les fonctionnalités</button>
+      </a>
+    </div>
+
+    <div class="features hidden" id="features">
+         <div class="feature" onclick="window.location.href='{% url 'produits' %}'">
+          <i class="fas fa-box-open" style="font-size: 50px; color: #2a9d8f;"></i>
+          <div class="feature-text">Suivi des stocks en temps réel</div>
+         </div>
+         <div class="feature" onclick="window.location.href='{% url 'home' %}'">
+          <i class="fas fa-exchange-alt" style="font-size: 50px; color: #e76f51;"></i>
+          <div class="feature-text">Gestion des ventes et des achats</div>
+         </div>
+         <div class="feature" onclick="window.location.href='{% url 'historique_ventes' %}'">
+          <i class="fas fa-file-invoice" style="font-size: 50px; color: #264653;"></i>
+          <div class="feature-text">Création de devis et de factures</div>
+        </div>
+    </div>
+    <!-- Commencer button, visible on large screens -->
+    <div class="buttons start-button hidden">
+      <a href="javascript:void(0);" onclick="startApp()">
+        <button class="button">Commencer</button>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Footer -->
+  <div class="footer hidden" id="footer">
+    <div class="footer-container">
+      <ul class="footer-list">
+       
+        <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+        <li><a href="{% url 'produits' %}">Stocks</a></li>
+        <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+        <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+        <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+        <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+        <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+        <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+        <li><a href="{% url 'notifications' %}">Notifications</a></li>
+        {% if is_admin %}
+        <li><a href="{% url 'admin_dashboard' %}">Administrateur</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+  </div>
+
+
+    <script src="{% static 'abonnement.js' %}"></script>
+
+ 
+  <p id="message-abonnement"></p>
+  
+
+
+</body>
+</html>
+
+

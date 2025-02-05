@@ -1,0 +1,226 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title> SuperPharma Devis</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+   
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style2.css' %}">
+    <link rel="stylesheet" href="{% static 'footer.css' %}">
+
+  </head>
+<body>
+    <div class="container mt-5">
+        <h2>Ajouter une nouvelle Vente</h2>
+        <form id="vente-form" method="post">
+            {% csrf_token %}
+          
+        <!-- Affichage des messages globaux -->
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Affichage des erreurs liées au stock -->
+        {% if erreurs_stock and erreurs_stock|length > 0 %}
+        <div class="alert alert-danger">
+            <strong>Erreurs liées au stock :</strong>
+            <ul>
+                {% for erreur in erreurs_stock %}
+                <li>{{ erreur }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <!-- Affichage des erreurs de validation -->
+        {% if erreurs_validation and erreurs_validation|length > 0 %}
+        <div class="alert alert-danger">
+            <strong>Erreurs de validation :</strong>
+            <ul>
+                {% for erreur in erreurs_validation %}
+                <li>{{ erreur }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        
+
+            <!-- Section Client -->
+            <div class="mb-3">
+                <label for="client" class="form-label">Nom du Client</label>
+                <input type="text" id="client" name="client" class="form-control" required>
+            </div>
+
+            <!-- Section Produits -->
+            <div id="produits-container">
+                <div class="row produit-row">
+                    <div class="col-md-4 mb-3">
+                        <label for="produit_0" class="form-label">medicament</label>
+                        <select name="produit_0" id="produit_0" class="form-control produit-select" required>
+                            <option value="">-- Sélectionnez un medicament --</option>
+                            {% for produit in produits %}
+                            <option value="{{ produit.id }}" data-price="{{ produit.price }}">{{ produit.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="quantite_0" class="form-label">Quantité</label>
+                        <input type="number" name="quantite_0" id="quantite_0" class="form-control quantite-input" min="1" value="1" required>
+                    </div>
+                    <div class="col-md-3 mb-3">
+                        <label for="prix_unitaire_0" class="form-label">Prix</label>
+                        <input type="text" name="prix_unitaire_0" id="prix_unitaire_0" class="form-control prix_unitaire-input" readonly>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <label for="remise_specifique_0" class="form-label">Remise (%)</label>
+                        <input type="number" name="remise_specifique_0" id="remise_specifique_0" class="form-control remise_specifique-input" min="0" max="100" value="0">
+                    </div>
+                    <div class="col-md-1 mb-3 d-flex align-items-end">
+                        <button type="button" class="btn btn-danger remove-row">Suprimer</button>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" id="add-product" class="btn btn-secondary mb-3">Ajouter un medicament</button>
+
+            <!-- Remise Globale -->
+            <div class="mb-3">
+                <label for="remise_globale" class="form-label">Remise Globale (%)</label>
+                <input type="number" id="remise_globale" name="remise_globale" class="form-control" min="0" max="100" value="0">
+            </div>
+
+            <!-- Montant Total -->
+            <div class="mb-3">
+                <label for="total-global" class="form-label">Montant Total</label>
+                <input type="text" id="total-global" class="form-control" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+    </div>
+    <div class="footer">
+        <div class="footer-container">
+            <ul class="footer-list">
+                <li><a href="{% url 'acc' %}">Home</a></li>
+                <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+                <li><a href="{% url 'produits' %}">Stocks</a></li>
+                <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+                <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+                <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+                <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+                <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+                <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+                <li><a href="{% url 'notifications' %}">Notifications</a></li>
+            </ul>
+            <div class="footer-account">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+        </div>
+    </div>
+    
+
+    <script  >
+        $(document).ready(function () {
+            let rowIndex = 1; // Compteur pour attribuer des indices uniques aux nouvelles lignes
+        
+            // Fonction pour mettre à jour le montant total
+            function updateTotal() {
+                let total = 0;
+                $(".produit-row").each(function () {
+                    const quantity = parseFloat($(this).find(".quantite-input").val()) || 0;
+                    const price = parseFloat($(this).find(".prix_unitaire-input").val()) || 0;
+                    const discount = parseFloat($(this).find(".remise_specifique-input").val()) || 0;
+                    // Calcul du total pour chaque ligne
+                    total += quantity * price * (1 - discount / 100);
+                });
+        
+                // Appliquer la remise globale
+                const globalDiscount = parseFloat($("#remise_globale").val()) || 0;
+                total *= (1 - globalDiscount / 100);
+        
+                // Mettre à jour le champ "Montant Total"
+                $("#total-global").val(total.toFixed(2));
+            }
+        
+            // Ajout d'une nouvelle ligne produit
+            $("#add-product").click(function () {
+                const newRow = $(".produit-row:first").clone(); // Cloner la première ligne
+                newRow.find("input, select").each(function () {
+                    const name = $(this).attr("name");
+                    const id = $(this).attr("id");
+                    if (name) $(this).attr("name", name.replace(/\d+/, rowIndex)); // Mettre à jour les noms
+                    if (id) $(this).attr("id", id.replace(/\d+/, rowIndex));       // Mettre à jour les IDs
+        
+                    // Réinitialiser les valeurs avec des valeurs par défaut
+                    if ($(this).hasClass("quantite-input")) {
+                        $(this).val(1); // Quantité par défaut : 1
+                    } else if ($(this).hasClass("remise_specifique-input")) {
+                        $(this).val(0); // Remise par défaut : 0
+                    } else {
+                        $(this).val(""); // Réinitialiser les autres champs
+                    }
+                });
+        
+                newRow.find(".prix_unitaire-input").val(""); // Réinitialiser le prix
+                $("#produits-container").append(newRow); // Ajouter la nouvelle ligne
+                rowIndex++; // Incrémenter le compteur
+            });
+        
+            // Mettre à jour le prix lorsque le produit sélectionné change
+            $(document).on("change", ".produit-select", function () {
+                const price = $(this).find(":selected").data("price");
+                $(this).closest(".produit-row").find(".prix_unitaire-input").val(price); // Affecter le prix au champ correspondant
+                updateTotal(); // Recalculer le total
+            });
+        
+            // Recalculer le total lorsqu'un champ quantité, remise ou remise globale change
+            $(document).on("input", ".quantite-input, .remise_specifique-input, #remise_globale", updateTotal);
+        
+            // Supprimer une ligne produit
+            $(document).on("click", ".remove-row", function () {
+                if ($(".produit-row").length > 1) {
+                    // Supprime uniquement la ligne du bouton cliqué
+                    $(this).closest(".produit-row").remove();
+                    updateTotal(); // Recalculer le total après suppression
+                } else {
+                    alert("Vous ne pouvez pas supprimer cette ligne."); // Message d'avertissement si c'est la dernière ligne
+                }
+            });
+        });
+        
+        
+        //   SUPPRIMER LE MESSAGE D'ERREUR APRES ACTUALISATION DE LA PAGE
+        
+        
+        // Supprime les messages après 5 secondes
+        document.addEventListener("DOMContentLoaded", function () {
+            setTimeout(function () {
+              const alertMessages = document.querySelectorAll(".alert");
+              alertMessages.forEach(function (message) {
+                message.remove();
+              });
+            }, 10000);
+          });
+          
+          
+        
+     
+    </script>
+</body>
+</html>

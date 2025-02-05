@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vente des produits</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+</head>
+<body>
+<div class="container-fluid px-1 py-5 mx-auto">
+  <div class="row d-flex justify-content-center">
+    <div class="col-xl-10 col-lg-12 col-md-9 col-11 text-center">
+      <h3>Vente des produits</h3>
+      <p class="text-danger">Veuillez noter que tous les champs sont obligatoires</p>
+
+      <div class="card">
+        <h5 class="text-center mb-4">PHARMACIE</h5>
+
+        <form class="form-card" method="POST" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          {% if messages %}
+            <ul class="messages">
+              {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: red;">
+                  {{ message }}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <!-- Section pour les produits -->
+          <div id="products-container">
+            <div class="row justify-content-between text-left product-row ligne-generée">
+              <!-- Produit -->
+              <div class="form-group col-sm-4 flex-column d-flex">
+                <label for="produit-{{ produit.id }}" class="form-control-label px-3">Produit<span class="text-danger"> *</span></label>
+                <select name="produit_{{ produit.id }}" id="produit-{{ produit.id }}" class="form-control">
+                  {% for produit in produits %}
+                    <option value="{{ produit.id }}">{{ produit.name }} </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Quantité -->
+              <div class="form-group col-sm-2 flex-column d-flex">
+                <label for="quantite-{{ produit.id }}" class="form-control-label px-3">Quantité<span class="text-danger"> *</span></label>
+                <input type="number" name="quantite_{{ produit.id }}" id="quantite-{{ produit.id }}" class="form-control" min="1" placeholder="Quantité">
+              </div>
+
+              <!-- Remise -->
+              <div class="form-group col-sm-2 flex-column d-flex">
+                <label for="remise-{{ produit.id }}" class="form-control-label px-3">Remise (%)</label>
+                <input type="number" name="remise_{{ produit.id }}" id="remise-{{ produit.id }}" class="form-control" min="0" max="100" placeholder="Remise">
+              </div>
+
+              <!-- Prix unitaire (lecteur seul) -->
+              <div class="form-group col-sm-2 flex-column d-flex">
+                <label class="form-control-label px-3">Prix unitaire</label>
+                <input type="number" name="price_{{ produit.id }}" id="price_{{ produit.id }}" class="form-control" readonly>
+              </div>
+
+              <!-- Supprimer -->
+              <div class="form-group col-sm-2 flex-column d-flex">
+                <button type="button" class="btn btn-danger remove-product">Supprimer</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bouton pour ajouter un produit -->
+          <div class="row justify-content-start">
+            <div class="form-group col-sm-4">
+              <button type="button" id="add-product" class="btn btn-secondary">Ajouter un produit</button>
+            </div>
+          </div>
+
+          <!-- Informations client -->
+          <div class="row justify-content-between text-left mt-4">
+            <div class="form-group col-sm-6 flex-column d-flex">
+              <label for="customer" class="form-control-label px-3">Nom du client<span class="text-danger"> *</span></label>
+              {{ form.customer }}
+              <div class="text-danger">{{ form.customer.errors }}</div>
+            </div>
+          </div>
+
+          <!-- Bouton de soumission -->
+          <div class="row justify-content-end mt-4">
+            <div class="form-group col-sm-4">
+              <input type="submit" class="btn btn-primary btn-block" value="Enregistrer" style="text-transform: uppercase;">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chargement de Bootstrap JS -->
+<!--script src="{% static 'bootstrap.min.js' %}"></script-->
+
+<script>
+// Gestion de la récupération des détails produits et affichage du prix
+document.addEventListener('change', function (event) {
+    if (event.target.matches('select[name^="produit_"]')) {
+        const productId = event.target.value;
+        const row = event.target.closest('.product-row');
+        const priceField = row.querySelector('input[name^="price_"]');  // Sélectionner le champ de prix
+        const loader = document.getElementById('loading');
+
+        if (productId) {
+            loader.style.display = 'block';
+            fetch(`/product-details/${productId}/`)  // Récupérer les détails du produit avec "produit_id"
+                .then(response => response.json())
+                .then(data => {
+                    loader.style.display = 'none';
+                    if (data.error) {
+                        alert(data.error);
+                    } else {
+                        priceField.value = data.price.toFixed(2);  // Afficher le prix avec deux décimales
+                    }
+                })
+                .catch(error => {
+                    loader.style.display = 'none';
+                    console.error('Erreur:', error);
+                    alert('Erreur lors de la récupération des détails du produit.');
+                });
+        } else {
+            loader.style.display = 'none';
+            priceField.value = '';  // Vider le champ de prix si aucun produit sélectionné
+        }
+    }
+});
+
+// Calcul de remise lorsque l'utilisateur modifie la remise
+document.addEventListener('input', function (event) {
+    if (event.target.matches('input[name^="remise_"]')) {
+        const row = event.target.closest('.product-row');
+        const priceField = row.querySelector('input[name^="price_"]');
+        const productSelect = row.querySelector('select[name^="produit_"]');
+        const productId = productSelect.value;
+
+        if (productId && event.target.value && priceField.value) {
+            const remise = parseFloat(event.target.value);
+            const price = parseFloat(priceField.value);
+
+            if (!isNaN(remise) && !isNaN(price)) {
+                const discountedPrice = price - (price * (remise / 100));
+                priceField.value = discountedPrice.toFixed(2);
+            }
+        }
+    }
+});
+
+// Ajout de nouvelles lignes
+document.getElementById('add-product').addEventListener('click', function () {
+    let productContainer = document.getElementById('products-container');
+    let productRow = document.querySelector('.product-row');
+    let newRow = productRow.cloneNode(true);
+
+    // Générer un nouvel index unique
+    const newIndex = document.querySelectorAll('.product-row').length;
+
+    newRow.querySelectorAll('input, select').forEach(function (input) {
+        if (input.name) {
+            input.name = input.name.replace(/\d+/, newIndex);
+            input.id = input.id.replace(/\d+/, newIndex);
+        }
+        if (input.type === 'number' || input.type === 'text') {
+            input.value = '';
+        }
+    });
+
+    productContainer.appendChild(newRow);
+});
+
+// Suppression de lignes
+document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('remove-product')) {
+        let productRow = event.target.closest('.product-row');
+        productRow.remove();
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width =device-wiidth, initial-scale=1.0">
+  
+  <title style="color: blue;"> SuperPharma-Ajout des medicaments</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'footer.css' %}">
+ 
+  
+  
+  <!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
+
+  <style>
+        :root {
+      --primary-color: #2a9d8f;
+      --secondary-color: #264653;
+      --background-color: #f0f4f8;
+      --text-color: #333;
+      --button-color: #e76f51;
+      --button-hover: #d64f39;
+      --border-radius: 8px;
+      --footer-bg-color: #264653;
+      --footer-text-color: #fff;
+    }
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+    .card {
+        border-radius: 15%;
+        padding: 5px;
+    }
+
+    .description textarea {
+    border-radius: 100px; /* Arrondi les bords du champ */
+    padding: 10px;
+    width: 100%;
+    border: 1px solid #ccc;
+}
+    
+  </style>
+
+</head>
+<body>
+
+    <div class="container-fluid px-1 py-5 mx-auto"   >
+        <div class="row d-flex justify-content-center"   >
+            <div class="col-xl-7 col-lg-8 col-md-9 col-11 text-center"  >
+                <h3>Ajout des Medicaments</h3>
+                <p class="blue-text" style="color: red";>Veillez noter que<br>tout les champs sont obligatoires</p>
+                <div class="card">
+                    <h5 class="text-center mb-4">PHARMACIE</h5>
+                    <form class="form-card" method="POST"  enctype="multipart/form-data"> 
+                       
+                        {% csrf_token %}
+
+                        {% if messages %}
+                            <ul classe ="messages">
+                                {% for message in messages %}
+                                <li {% if message.tags %} class = "{{ message.tags }}" {% endif %} style ="color: red;">
+                                    {{message}}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+
+                        <div class="row justify-content-between text-left" style=" margin-bottom: 15px;" >
+                            <div class="form-group col-sm-6 flex-column d-flex">
+                                 
+                            <label class="form-control-label px-3">Le nom du produit<span class="text-danger"> *</span></label> 
+                            {{form.name}}
+
+                            <div class="text-danger">{{form.name.errors}}</div>
+                            
+                            
+                            {% comment "" %}<input type="text" id="name" name="name" placeholder="Enterz le nom du produit" onblur="validate(1)"Request> {% endcomment %}
+                                    {% if errors.name %}
+                                    <div class ="error" style="color:red;">
+                                         <p> {{errors.name}} </p>
+                                    </div>
+                                    {% endif %}
+
+                              </div>
+                              <div class="form-group col-sm-6 flex-column d-flex">
+                                <label class="form-control-label px-3">
+                                  Veuillez sélectionner la catégorie <span class="text-danger">*</span>
+                                </label>
+                              
+                                <!-- Le champ de sélection de la catégorie -->
+                                {{ form.category }}
+                              
+                                <!-- Bouton pour ajouter une nouvelle catégorie, uniquement visible pour les administrateurs -->
+                                {% if user.profil.is_compte_admin %}
+                                  <a href="{% url 'ajouter_categorie' %}" class="btn btn-primary btn-sm ml-2">Ajouter une catégorie</a>
+                                {% endif %}
+                              
+                                <!-- Affichage des erreurs de validation -->
+                                <div class="text-danger">
+                                  {% for error in form.category.errors %}
+                                    <p>{{ error }}</p>
+                                  {% endfor %}
+                                </div>
+                              </div>
+                              
+                        </div>
+                        <div class="row justify-content-between text-left" style=" margin-bottom: 15px;"  >
+                            <div class="form-group col-sm-6 flex-column d-flex"> 
+                                <label class="form-control-label px-3">Le prix du medicament<span class="text-danger"> *</span></label>
+                                {{form.price}}
+
+                                <div class="text-danger">{{form.price.errors}}</div>
+                                
+                                
+                                {% comment %} <input type="text" id="price" name="price" placeholder="Enterz le prix du produit" onblur="validate(3)"Request>  {% endcomment %}
+                                {% if errors.price %}
+                                   <div class ="error" style="color:red;">
+                                        <p> {{errors.price}} </p>
+                                   </div>
+                                {% endif %}
+                            
+                            </div>
+                            <div class="form-group col-sm-6 flex-column d-flex" >
+
+                                <div class="form-group col-sm-6 flex-column d-flex"> <label class="form-control-label px-3">image du produit<span class="text-danger"> *</span></label> 
+                                    {{form.image}}
+    
+                                    <div class="text-danger">{{form.image.errors}}</div>
+                                </div>  
+                                <!-- <label  style="display: none;" class="form-control-label px-3">La quantité du produit<span class="text-danger"> *</span></label>
+                                <input   style="display: none;" type="number" name="quantite" value="0" class="form-control" readonly>
+                                <div class="text-danger">{{ form.quantite.errors }}</div>
+                            
+                                
+                                {% comment %} <input type="text" id="quantite" name="quantite" placeholder="Enterz la quantité du produit" onblur="validate(4)"Request> {% endcomment %}
+                                {% if errors.quantite %}
+                                    <div class ="error" style="color:red;">
+                                        <p> {{errors.quantite}} </p>
+                                    </div>
+                                {% endif %} -->
+                            </div>
+                        </div>
+                        <div class="row justify-content-between text-left">
+                            <!-- <div class="form-group col-sm-6 flex-column d-flex"  style="display: none;" >
+                                <label  style="display: none;" class="form-control-label px-3">La date d'expiration defaut<span class="text-danger"> *</span></label>
+                                <input   style="display: none;" type="date" name="date_expiration" value="{% now 'Y-m-d' %}" class="form-control" readonly>
+                                <div class="text-danger">{{ form.date_expiration.errors }}</div>
+                            
+                                {% comment %} <input type="text" id="date_expiration" name="date_expiration" placeholder="YYYY-MM-JJ" onblur="validate(5)"Request>  {% endcomment %}
+                                {% if errors.date_expiration%}
+                                    <div class ="error" style="color:red;">
+                                        <p> {{errors.date_expiration}} </p>
+                                    </div>
+                                {% endif %}
+                            
+                                </div> -->
+                            </div>
+                           
+                                {% comment %} <input type="file" id="image" name="image" placeholder="" onblur="validate(5)"> </div> {% endcomment %}
+                        
+                        <div class="row justify-content-between text-left"  >
+                            <div class="form-group col-12 flex-column d-flex"   > <label class="form-control-label px-3">La description du produit<span class="text-danger"> *</span></label> 
+                               <div  class="description"  style="border-radius: 150%;">
+                                  {{form.description}}
+                               </div>
+                               
+
+                                <div class="text-danger">{{form.description.errors}}</div>
+                                
+                                {% comment %} <input type="text" id="description" name="description" placeholder="Enterz la description du produit" onblur="validate(6)"Request> {% endcomment %}
+                                {% if errors.description %}
+                                <div class ="error" style="color:red;">
+                                     <p> {{errors.description}} </p>
+                                </div>
+                                {% endif %}
+                            
+                            </div>
+                        </div>
+                        <div class="row justify-content-end">
+                            <div class="form-group col-sm-4">
+                                <input type="submit" class="btn-block btn-primary" value="Enregister" style="text-transform: uppercase; margin: 6px;  border-radius: 10%; ">
+                                 <!--button type="submit" >Enregister</!-button> </div-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <div class="footer-container">
+            <ul class="footer-list">
+                <li><a href="{% url 'acc' %}">Home</a></li>
+                <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+                <li><a href="{% url 'produits' %}">Stocks</a></li>
+                <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+                <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+                <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+                <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+                <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+                <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+                <li><a href="{% url 'notifications' %}">Notifications</a></li>
+            </ul>
+            <div class="footer-account">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+        </div>
+    </div>
+    
+</body>
+
+<script  src="{% static 'script.js' %}"></script>
+
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+</html>

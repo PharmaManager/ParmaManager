@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: blue;"> SuperPharma-Historique des Achats</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'historiqueachat.css' %}">
+</head>
+<body>
+  
+   
+    <a href="{% url 'creer_achat' %}" >
+      
+        <button class="app-content-headerButton"> <i class="bi bi-plus-square-fill" style="color: yellow;"> </i> Effectuer un achat </button>
+     </a>
+
+    <form class="d-flex" action="{% url 'rechercher_factureAchat' %}" method='get'>
+    
+        <input class="search-bar" placeholder="Recherchez une facture" type="text" name="produit">
+    </form> 
+   
+    {% include "zonee_gauche.html" %}
+    <div class="app-content">
+               
+                  
+     
+                  
+
+    <div class="container mt-5">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>N°</th>
+                    <th>Fournisseurs</th>
+                    <th>Date</th>
+                    <th>Montant Total</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for facture in factures %}
+                    <tr>
+                        <td>{{ facture.id }}</td>
+                        <td>{{ facture.fournisseur }}</td>
+                        <td>{{ facture.date_creation|date:"d/m/Y H:i" }}</td>
+                        <td>{{ facture.montant_total }} {{ parametre.devise }}</td>
+                        <td>
+                            <a href="{% url 'details_achat' facture.pk %}" class="btn btn-primary btn-sm">Détails</a>
+                            {% if is_admin %}
+                            <a href="{% url 'supprimer_facture_achat' facture.pk %}" class="btn btn-danger"> <i class="bi bi-trash3"></i> Supprimer</a>
+                    
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

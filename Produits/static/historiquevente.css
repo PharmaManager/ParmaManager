@@ -1,0 +1,137 @@
+/* Appliquer un texte en blanc sur toute la page */
+body {
+    color: white; /* Texte blanc par défaut */
+    background-color: #343a40; /* Fond sombre pour tout le corps de la page */
+    font-family: Arial, sans-serif; /* Police de base */
+    overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
+    margin: 0;
+    padding: 0;
+}
+
+.zonnee_gauche {
+    width: 250px; /* Ajustez la largeur comme nécessaire */
+    height: 100vh; /* Hauteur de l'écran, ou une hauteur spécifique */
+    overflow-y: auto; /* Ajoute la barre de défilement verticale si nécessaire */
+    position: fixed; /* Cela permet de fixer la zone à gauche si nécessaire */
+    left: 0;
+    top: 0;
+}
+
+/* Zone de contenu principal */
+.app-content {
+    
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 100%;
+    overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
+}
+
+/* Style pour les entêtes du tableau */
+th {
+    background-color: #343a40; /* Fond sombre pour les entêtes */
+    color: white; /* Texte blanc pour les entêtes */
+}
+
+td {
+    color: white; /* Texte blanc pour les cellules */
+}
+
+/* Style de la table */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    table-layout: fixed; /* Pour forcer les colonnes à s'ajuster à la taille disponible */
+}
+
+/* Espacement des cellules */
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+/* Lignes alternées du tableau */
+tbody tr:nth-child(odd) {
+    background-color: #555; /* Fond légèrement plus clair pour les lignes impaires */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #444; /* Fond plus sombre pour les lignes paires */
+}
+
+tbody tr:hover {
+    background-color: #666; /* Fond survolé plus clair */
+}
+
+/* Style de la barre de recherche */
+.search-bar {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: white; /* Texte blanc dans la barre de recherche */
+    background-color: #555; /* Fond sombre pour la barre de recherche */
+}
+
+/* Style des actions du tableau (boutons) */
+.btn-sm {
+    padding: 5px 10px;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white; /* Texte blanc pour les boutons */
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Message d'aucune donnée */
+p {
+    text-align: center;
+    color: white; /* Texte blanc pour les messages */
+    font-size: 18px;
+}
+
+/* Responsivité : Gestion des petits écrans */
+@media (max-width: 1200px) {
+    table {
+        font-size: 14px;
+    }
+
+    .search-bar {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    .search-bar {
+        width: 70%;
+    }
+}
+
+@media (max-width: 576px) {
+    table {
+        font-size: 10px;
+        margin-bottom: 20px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .search-bar {
+        width: 100%;
+    }
+}

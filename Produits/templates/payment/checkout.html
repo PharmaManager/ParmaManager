@@ -1,0 +1,90 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title style="color: blue;"> SuperPharma-Paiement Abonnement<</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+    <!-- Charger PayPal avec la variable dynamique -->
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&vault=true&intent=subscription" data-sdk-integration-source="button-factory"></script>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .payment-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .paypal-button-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="payment-container">
+            <h2 class="mb-4">Abonnement Premium</h2>
+            <p>Profitez de notre service pour seulement <strong>1 EUR/mois</strong> !</p>
+           
+
+            {% if message_abonnement %}
+            <div class="alert-custom">
+                {{ message_abonnement }}
+                <a href="{% url 'paypal_checkout' %}">Renouveler maintenant</a>
+            </div>
+           {% endif %}
+            <div id="paypal-button-container"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            paypal.Buttons({
+                style: {
+                    shape: 'pill',
+                    color: 'gold',
+                    layout: 'vertical',
+                    label: 'subscribe'
+                },
+                createSubscription: function(data, actions) {
+                    return actions.subscription.create({
+                        plan_id: "{{ paypal_plan_id }}"  // Récupérer l'ID depuis Django
+                    });
+                },
+                onApprove: function(data, actions) {
+                    fetch('/paypal/subscription-success/', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': '{{ csrf_token }}'
+                        },
+                        body: JSON.stringify({
+                            subscription_id: data.subscriptionID
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert('Abonnement activé avec succès !');
+                        window.location.href = '/dashboard/';
+                    })
+                    .catch(error => console.error('Erreur:', error));
+                }
+            }).render('#paypal-button-container');
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'categorie_supp.css' %}">
+
+<link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+
+{% block content %}
+<div class="container">
+    <h2>Confirmer la suppression</h2>
+    <p>Êtes-vous sûr de vouloir supprimer la catégorie "{{ category.name }}" ?</p>
+
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+        <a href="{% url 'category_list' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

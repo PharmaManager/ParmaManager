@@ -1,0 +1,197 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    
+    <title style="color: blue;"> SuperPharma-Suppression d'utilisateurs</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'bjp/logo.ico' %}">
+    
+    <style>
+        /* Style général pour le formulaire de suppression */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    background-color: #dc3545;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.card-body {
+    padding: 30px;
+}
+
+h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    text-align: center;
+}
+
+p {
+    font-size: 1rem;
+    color: #6c757d;
+    line-height: 1.5;
+}
+
+/* Boutons stylisés */
+.btn {
+    font-size: 1.1rem;
+    padding: 12px;
+    border-radius: 25px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border: none;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    border: none;
+}
+
+/* Hover effect pour les boutons */
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.footer {
+    position: fixed;
+    bottom: -100px;
+    left: 0;
+    width: 100%;
+    background-color: #007bff;
+    color:#fff;
+    transition: bottom 0.3s ease;
+    z-index: 1000;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 15px;
+}
+
+.footer-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px;
+}
+
+.footer-list li a {
+    color: #adb5bd;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-list li a:hover {
+    color: #fff;
+}
+
+.footer-account .logout {
+    color: #dc3545;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.footer-account .logout:hover {
+    color: #fff;
+}
+
+.footer-bottom {
+    text-align: center;
+    padding: 10px 0;
+    background: #212529;
+    font-size: 0.9rem;
+}
+
+.footer:hover {
+    bottom: 0;
+}
+
+@media (max-width: 768px) {
+    .buttons-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-list {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .footer {
+        padding-bottom: 10px;
+    }
+}
+/* Responsive design pour les petits écrans */
+@media (max-width: 767px) {
+    .card-body {
+        padding: 20px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}
+
+    </style>
+  </head>
+  <body>
+{% block content %}
+<div class="container mt-5">
+    <h2 class="text-center text-danger">Supprimer un utilisateur</h2>
+    <p class="text-center mt-4">Êtes-vous sûr de vouloir supprimer l'utilisateur <strong>{{ utilisateur.username }}</strong> ?</p>
+    <form method="POST" class="text-center mt-4">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+        <a href="{% url 'liste_utilisateurs' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}
+<div class="footer">
+    <div class="footer-container">
+        <ul class="footer-list">
+            <li><a href="{% url 'acc' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+            <li><a href="{% url 'produits' %}">Stocks</a></li>
+            <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+            <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+            <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+            <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+            <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+            <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+            <li><a href="{% url 'notifications' %}">Notifications</a></li>
+        </ul>
+        <div class="footer-account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+  </body>
+</html>
+
+

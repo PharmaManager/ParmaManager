@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paiement PayPal</title>
+    <script>
+        var csrf_token = "{{ csrf_token }}";  // Récupère le token CSRF
+    </script>
+    
+    <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
+
+</head>
+<body>
+    <h2>Paiement avec PayPal ou Carte Bancaire</h2>
+    
+
+    
+    <div id="paypal-button-container"></div>
+
+    <script>
+        paypal.Buttons({
+            createOrder: function(data, actions) {
+    return fetch('/payment/create-paypal-order/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrf_token  // Inclut le token CSRF
+        },
+        body: JSON.stringify({
+            // Les informations nécessaires pour la commande
+        })
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.json().then(errorData => {
+                throw new Error(errorData.error || 'Une erreur est survenue');
+            });
+        }
+        return response.json();
+    })
+    .then(order => {
+        return order.id;  // Retourne l'ID de la commande à PayPal
+    })
+    .catch(error => {
+        console.error('Erreur de création de la commande:', error.message);
+    });
+}
+
+,
+
+            onApprove: function(data, actions) {
+                return fetch(`/capture-paypal-order/${data.orderID}/`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                }).then(response => response.json())
+                  .then(details => {
+                      alert('Paiement réussi : ' + details.id);
+                      window.location.href = "/payment/success/";
+                  });
+            },
+
+            onCancel: function(data) {
+                alert("Paiement annulé");
+                window.location.href = "/payment/cancel/";
+            },
+
+            onError: function(err) {
+                console.error(err);
+                alert("Une erreur est survenue");
+            }
+        }).render('#paypal-button-container');
+    </script>
+</body>
+</html>

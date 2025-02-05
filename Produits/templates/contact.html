@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title style="color: blue;"> SuperPharma-Support</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href=" {% static 'footer.css' %}">
+
+    <style>
+        /* Style pour la page de contact */
+        .contact-page {
+          padding: 20px;
+          text-align: center;
+          max-width: 800px;
+          margin: 0 auto;
+        }
+    
+        .contact-page h2 {
+          font-size: 2rem;
+          margin-bottom: 15px;
+        }
+    
+        .contact-page p {
+          font-size: 1.2rem;
+          margin-bottom: 30px;
+          color: #555;
+        }
+    
+        .contact-form-container {
+          max-width: 600px;
+          margin: 0 auto;
+          text-align: left;
+        }
+    
+        .contact-form-container form {
+          background-color: #f8f8f8;
+          padding: 20px;
+          border-radius: 8px;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    
+        .contact-form-container form .button {
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          font-size: 1rem;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+        }
+    
+        .contact-form-container form .button:hover {
+          background-color: #45a049;
+        }
+    
+        .messages {
+          margin-top: 20px;
+          padding: 10px;
+          border-radius: 5px;
+          background-color: #e0f7fa;
+        }
+    
+        .footer {
+          background-color: #333;
+          color: #fff;
+          padding: 20px 0;
+          margin-top: 40px;
+        }
+    
+        .footer-container {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          max-width: 1200px;
+          margin: 0 auto;
+        }
+    
+        .footer-list {
+          list-style-type: none;
+          padding: 0;
+          display: flex;
+          gap: 20px;
+        }
+    
+        .footer-list li a {
+          color: #fff;
+          text-decoration: none;
+          font-size: 1rem;
+          transition: color 0.3s ease;
+        }
+    
+        .footer-list li a:hover {
+          color: #4CAF50;
+        }
+    
+        .footer-account {
+          text-align: right;
+        }
+    
+        .footer-bottom {
+          background-color: #222;
+          text-align: center;
+          padding: 10px;
+          margin-top: 20px;
+        }
+    
+        .footer-bottom p {
+          margin: 0;
+          font-size: 1rem;
+          color: #ccc;
+        }
+    
+        .logout {
+          color: #f44336;
+          text-decoration: none;
+          font-size: 1rem;
+        }
+    
+        .logout:hover {
+          color: #d32f2f;
+        }
+    
+        /* Responsive */
+        @media (max-width: 768px) {
+          .footer-container {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+    
+          .footer-list {
+            flex-direction: column;
+            align-items: flex-start;
+          }
+    
+          .contact-page {
+            padding: 20px;
+          }
+    
+          .contact-form-container {
+            width: 100%;
+          }
+        }
+      </style>
+  </head>
+  <body>
+
+  <div class="contact-page">
+    <h2>Contactez-nous</h2>
+    <p>Si vous avez des questions ou des préoccupations, n'hésitez pas à nous contacter en remplissant le formulaire ci-dessous.</p>
+
+    <div class="contact-form-container">
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="button">Envoyer le message</button>
+      </form>
+
+      {% if messages %}
+        <div class="messages">
+          {% for message in messages %}
+            <div class="message {{ message.tags }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer">
+    <div class="footer-container">
+      <ul class="footer-list">
+        <li><a href="{% url 'acc' %}">Home</a></li>
+        <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+        <li><a href="{% url 'produits' %}">Stocks</a></li>
+        <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+        <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+        <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+        <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+        <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+        <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+        <li><a href="{% url 'notifications' %}">Notifications</a></li>
+      </ul>
+      <div class="footer-account">
+        {% if user.is_authenticated %}
+          <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+        {% endif %}
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+  </div>
+
+    
+</body>
+</html>

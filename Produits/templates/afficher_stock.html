@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+    <title style="color: blue;"> SuperPharma-Stock des Medicaments</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+</head>
+<body>
+    <h2>Stock des Medicaments</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Produit</th>
+                <th>Quantité Totale</th>
+                <th>Lots (Quantité et Date d'expiration)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produit, lots in stocks.items %}
+                <tr>
+                    <td>{{ produit.name }}</td>
+                    <td>{{ produit.quantite }}</td>
+                    <td>
+                        <ul>
+                            {% for lot in lots %}
+                                <li>
+                                    {{ lot.quantite }} unités (Expire le {{ lot.date_expiration }})
+                                </li>
+                            {% empty %}
+                                <li>Aucun stock disponible</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

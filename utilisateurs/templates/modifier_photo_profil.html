@@ -1,0 +1,8 @@
+{% load static %}
+<title style="color: blue;"> SuperPharma</title>
+<link rel="icon" type="image/x-icon" href="{% static 'bjp/logo.ico' %}">
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Mettre à jour la photo</button>
+</form>

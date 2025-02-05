@@ -1,0 +1,23 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title style="color: blue;"> SuperPharma-Paiement Annulé</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    
+   
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container text-center mt-5">
+        <div class="alert alert-warning">
+            <h2>Paiement Annulé ❌</h2>
+            <p>Vous avez annulé votre paiement. Votre abonnement n'a pas été activé.</p>
+            <a href="/payment/checkout/" class="btn btn-primary mt-3">Réessayer</a>
+        </div>
+    </div>
+</body>
+</html>

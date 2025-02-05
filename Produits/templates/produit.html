@@ -1,0 +1,233 @@
+{% load static %}
+
+
+
+<div   class="scrollable-products-stylearea" style="max-height: 500px;overflow-y:auto;">
+
+
+{% block produit %}
+
+{% if messages %}
+ <ul class ="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class ="{message.tags}" {% endif %} style ="color: green;">
+        {{message}}
+    </li>
+    {% endfor %}
+ </ul>
+{% endif %}
+<div   class="products-area-wrapper tableView">
+  
+  <style>
+    
+  
+    .button {
+      padding: 5px 10px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+      color: white;
+
+    } 
+
+    .red {
+      background-color: red;
+
+    }
+
+    .yellow {
+      background-color: yellow;
+    }
+    .green {
+      background-color: green;
+    }
+
+    .footer-container {
+      /* 📌 Cacher le menu sur les grands écrans (PC) */
+@media (min-width: 768px) {
+    .footer-container {
+        display: none; /* Cache le footer sur PC */
+    }
+}
+
+/* 📌 Activer le menu sur les petits écrans (tablettes et mobiles) */
+@media (max-width: 768px) {
+    .footer-container {
+        display: block; /* Afficher le footer sur mobile */
+    }
+
+    .footer-menu-btn {
+        display: block; 
+        width: 100%;
+        padding: 10px;
+        background-color: #007FFF;
+        color: white;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+        text-align: center;
+    }
+
+    .footer-list {
+        display: none; /* Caché par défaut sur mobile */
+        background: #f1f1f1;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .footer-list li {
+        list-style: none;
+        padding: 5px 0;
+    }
+
+    .footer-list a {
+        text-decoration: none;
+        color: #007FFF;
+        font-weight: bold;
+    }
+}
+
+    }
+
+  </style>
+
+
+    <!-- Titre du tableau -->
+    <div class="products-header">
+      <div class="product-cell image">
+        Nom du Medicaments
+        <button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512">
+            <path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/>
+          </svg>
+        </button>
+      
+      </div>
+      
+      <div class="product-cell category">Categories<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+        </button></div>
+      <div class="product-cell status-cell">Status & Quantites<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+        </button></div>
+      <div class="product-cell sales">Prix<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+        </button></div>
+      <div class="product-cell stock">Descriptions<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+        </button></div>
+      <div class="product-cell price">Date ajout<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+        </button></div>
+      <div class="product-cell price">Date Expiration<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512"><path fill="currentColor" d="M496.1 138.3L375.7 17.9c-7.9-7.9-20.6-7.9-28.5 0L226.9 138.3c-7.9 7.9-7.9 20.6 0 28.5 7.9 7.9 20.6 7.9 28.5 0l85.7-85.7v352.8c0 11.3 9.1 20.4 20.4 20.4 11.3 0 20.4-9.1 20.4-20.4V81.1l85.7 85.7c7.9 7.9 20.6 7.9 28.5 0 7.9-7.8 7.9-20.6 0-28.5zM287.1 347.2c-7.9-7.9-20.6-7.9-28.5 0l-85.7 85.7V80.1c0-11.3-9.1-20.4-20.4-20.4-11.3 0-20.4 9.1-20.4 20.4v352.8l-85.7-85.7c-7.9-7.9-20.6-7.9-28.5 0-7.9 7.9-7.9 20.6 0 28.5l120.4 120.4c7.9 7.9 20.6 7.9 28.5 0l120.4-120.4c7.8-7.9 7.8-20.7-.1-28.5z"/></svg>
+        </button></div>
+      <div class="product-cell price">Actions<button class="sort-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 512 512">
+          </svg>
+        </button></div>
+    </div>
+    <!-- fin -->
+{% for n in object_list %}
+    <!--produit-->
+    <div class="products-row" id="produit-{{ n.id }}">
+        <button class="cell-more-button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-vertical"><circle cx="12" cy="12" r="1"/><circle cx="12" cy="5" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+        </button>
+        
+        <div class="product-cell image" >
+
+            {% if n.image %}
+            <!--affiche le avec ceci-->
+            <img src="{{n.image.url}}" alt ="produit">
+            {% else %}
+            <!--s'il n'y a pas d'image dans la base de donnée pour le produit, affiche une image par defaut-->
+            <img src="https://th.bing.com/th/id/R.8e14aecbf717a0040ac4454318f7f230?rik=hjfPP%2fSEicAhmA&pid=ImgRaw&r=0" alt="product">
+            {% endif %}
+            <span>{{n.name}}</span>
+
+        </div>
+
+
+        <div class="product-cell category"><span class="cell-label">Categories:</span>{{n.category}}</div>
+        <div class="product-cell status-cell">
+          <span class="cell-label">Status:</span>
+          <span class="status active"><button class="button {{n.statut_quantite}}"></button> {{n.total_stock}}</span>
+        </div>
+        <div class="product-cell price"><span class="cell-label">prix:</span>{{n.price}} {{parametre.devise}} </div>
+        <div class="product-cell description"><span class="cell-label">Description:</span>{{n.description}}</div>
+        <div class="product-cell price"><span class="cell-label">Date Ajout:</span>{{n.date_ajout}}</div>
+        <div class="product-cell sales"><span class="cell-label">Date Expiration:</span>Détails dans le stock</div>
+        <div class="product-cell sales"><span class="cell-label">
+          Actions :</span>
+         
+          <a href="{% url 'modifier' n.uuid n.slug %}" class="btn btn-info"> <i class="bi bi-pencil-square"></i></a>
+          {% if is_admin %}
+          <a href="{% url 'delete' n.uuid n.slug %}" class="btn btn-danger"> <i class="bi bi-trash3"></i></a>
+          {% endif %}
+          <!--a class="btn btn-danger"><i class="bi bi-trash3 delete-button" data-id="{{ n.id }}"></i></a-->
+
+          <div class="modal" id="successModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Succès</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <p>Le medicament a été supprimé avec succès.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button> 
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <a href="{% url 'detail' n.uuid n.slug %}" class="btn btn-primary"> <i class="bi bi-info-circle"></i> </a>
+        </div>
+
+      </div>
+      <!--fin-->
+{% endfor %}
+    </div> 
+</div>
+
+
+<script src="{% static 'jquery-3.7.1.min.js' %}"></script>
+<script src="{% static 'menu.js' %}"></script>
+<!--script de suppression-->
+<script>
+  $(document).ready(function() {
+      $('.delete-button').on('click', function() {
+        var produitid = $(this).data('id');
+        $.ajax({
+          url: '/supprimer/'+ produitid + '/',
+          type: "POST",
+          
+          data: {
+              'csrfmiddlewaretoken': '{{ csrf_token }}'
+          },
+          
+          success: function(reponse) {
+              if (reponse.success) {
+                    $('#produit-'+ produitid).remove();
+                    $('#successModal').modal('show');
+              }else {
+                  alert('Erreur lors de la suppression.');
+              }
+            },
+            
+            error: function() {
+                alert('Erreur lors de la suppression.');
+          }
+        });
+      });
+  });
+
+</script>
+
+</div>
+{% endblock produit %}

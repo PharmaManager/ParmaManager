@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'stocks.css' %}">
+{% block produit %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: green;">
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<div class="products-area-wrapper tableView">
+    <style>
+        .button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .green {
+            background-color: green;
+        }
+
+        .lotdate {
+            color: #fff;
+            margin: 0; /* Réduit les marges globales */
+        }
+
+        .lotdate p {
+            margin: 4px 0; /* Réduction de l'espace entre les lignes */
+            line-height: 1.2; /* Compacte l'espacement vertical */
+        }
+    </style>
+
+    <!-- Titre du tableau -->
+    <div class="products-header">
+        <div class="product-cell image">Nom du produit</div>
+        <div class="product-cell category">Catégorie</div>
+        <div class="product-cell status-cell">Statut & Quantité</div>
+        <div class="product-cell sales">Prix {{ parametre.devise }}</div>
+        <div class="product-cell stock">Description</div>
+        <div class="product-cell status-cell">Lot & Date d'expiration</div>
+        <div class="product-cell price">Actions</div>
+    </div>
+
+    {% if object_list %}
+    {% for product in object_list %}
+    <div class="products-row" id="produit-{{ product.id }}">
+        <div class="product-cell image">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="Produit">
+            {% else %}
+            <img src="https://via.placeholder.com/150" alt="Produit">
+            {% endif %}
+            <span>{{ product.name }}</span>
+        </div>
+
+        <div class="product-cell category">{{ product.category }}</div>
+        <div class="product-cell status-cell">
+            <span class="status active">
+                <button class="button {{ product.statut_quantite }}"></button>
+                {{ product.total_quantity }}
+            </span>
+        </div>
+        <div class="product-cell sales">{{ product.price|floatformat:2 }} {{ parametre.devise }}</div>
+        <div class="product-cell stock">
+            {{ product.description }}
+        </div>
+
+        <!-- Gestion des lots : Quantité et date d'expiration -->
+        <div class="lotdate">
+            {% for lot in product.lots.all %}
+            <p>
+                {{ lot.quantite }} unité(s)
+                {{ lot.date_expiration|date:"d/m/Y" }}
+            </p>
+            {% empty %}
+            <p style="color: red;">Aucun lot trouvé pour ce produit.</p>
+            {% endfor %}
+        </div>
+
+        <div style="display: flex; gap: 8px;" class="product-cell price">
+            <span class="cell-label">Actions :</span>
+            <a href="{% url 'modifier_lots_produit' product.uuid product.slug %}" class="btn btn-info">
+                <i class="bi bi-pencil-square"></i>
+            </a>
+            <a href="{% url 'delete' product.uuid product.slug %}" class="btn btn-danger">
+                <i class="bi bi-trash3"></i>
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <h1 style="color: #fff; font-weight: bold;">Aucun produit ne correspond à votre recherche.</h1>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const header = document.querySelector('.app-content-headerText');
+        header.textContent = 'Stocks';  
+        header.style.textAlign = 'center';    
+        header.style.fontSize = '36px';       
+        header.style.fontWeight = 'bold';     
+        header.style.color = '#fff';          
+        header.style.fontFamily = 'Arial, sans-serif'; 
+    });
+    const searchBar = document.querySelector('.search-bar');
+    searchBar.style.display = 'none';
+</script>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends "base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'stocks.css' %}">
+{% block produit %}
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li {% if message.tags %} class="{{ message.tags }}" {% endif %} style="color: green;">
+        {{ message }}
+    </li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+
+<div class="products-area-wrapper tableView">
+    <style>
+        .button {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+        }
+
+        .red {
+            background-color: red;
+        }
+
+        .yellow {
+            background-color: yellow;
+        }
+
+        .green {
+            background-color: green;
+        }
+        .lotdate {
+            color: #fff;
+        }
+    </style>
+
+
+    
+    <!-- Titre du tableau -->
+    <div class="products-header">
+        <div class="product-cell image">Nom du produit</div>
+        <div class="product-cell category">Catégorie</div>
+        <div class="product-cell status-cell">Statut & Quantité</div>
+        <div class="product-cell sales">Prix {{parametre.devise}} </div>
+        <div class="product-cell stock">Description</div>
+        <div class="product-cell status-cell">Lot & Date d'expiration</div>
+        <div class="product-cell price">Actions</div>
+    </div>
+
+    {% for product in object_list %}
+    <div class="products-row" id="produit-{{ product.id }}">
+        <div class="product-cell image">
+            {% if product.image %}
+            <img src="{{ product.image.url }}" alt="Produit">
+            {% else %}
+            <img src="https://th.bing.com/th/id/R.8e14aecbf717a0040ac4454318f7f230?rik=hjfPP%2fSEicAhmA&pid=ImgRaw&r=0" alt="Produit">
+            {% endif %}
+            <span>{{ product.name }}</span>
+        </div>
+
+        <div class="product-cell category">{{ product.category }}</div>
+        <div class="product-cell status-cell">
+            <span class="status active">
+                <button class="button {{ product.statut_quantite }}"></button>
+                {{ product.total_quantity }}
+            </span>
+        </div>
+        <div class="product-cell sales">{{ product.price }} {{ parametre.devise }}</div>
+        <div class="product-cell stock">
+          {{ product.description }}
+        </div>
+      
+
+        <!-- Gestion des lots : Quantité et date d'expiration -->
+        <div class="lotdate">
+            {% for lot in product.lots.all %}
+            <p style="white-space: pre;"> {{ lot.quantite }} Unité(s)    {{ lot.date_expiration|date:"d/m/Y" }}</p>
+            {% empty %}
+            <p style="color: red;">-------None-------</p>
+            {% endfor %}
+        </div>
+
+        <div style="display: flex; gap: 8px;" class="product-cell price"><span class="cell-label">
+            Actions :</span>
+            <a href="{% url 'modifier_lots_produit' product.id %}" class="btn btn-info"> <i class="bi bi-pencil-square"></i></a>
+           
+            <a href="{% url 'delete' product.uuid product.slug %}" class="btn btn-danger"> <i class="bi bi-trash3"></i></a>
+          
+
+            <!--a class="btn btn-danger"><i class="bi bi-trash3 delete-button" data-id="{{ n.id }}"></i></a-->
+  
+            <div class="modal" id="successModal" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Succès</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    <p>Le produit a été supprimé avec succès.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fermer</button> 
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <a href="{% url 'detail' product.uuid product.slug %}" class="btn btn-primary"> <i class="bi bi-info-circle"></i> </a>
+          </div>
+  
+        </div>
+    {% endfor %}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+  // Récupérer le formulaire
+  const form = document.querySelector('form.d-flex');
+  
+  // Vérifier si le formulaire existe
+  if (form) {
+    // Modifier l'attribut action pour qu'il pointe vers 'recherche_stock'
+    form.action = "{% url 'recherche_stock' %}";
+  }
+});
+
+
+    const header = document.querySelector('.app-content-headerText');
+  header.textContent = 'Stocks';  // Remplacer le texte
+
+  // Appliquer le style via JavaScript
+  header.style.textAlign = 'center';    // Centrer le texte
+  header.style.fontSize = '36px';       // Taille de police plus grande
+  header.style.fontWeight = 'bold';     // Gras
+  header.style.color = '#fff';          // Couleur du texte
+
+  header.style.fontFamily = 'Arial, sans-serif'; // Police
+
+  //--------------------------
+  
+  
+    </script>
+</div>
+{% endblock %}

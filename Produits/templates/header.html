@@ -1,0 +1,67 @@
+{% block header %}
+  
+
+<style>
+  .pharmacy-name {
+      text-align: center;
+      font-size: 2.1rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: linear-gradient(45deg, #2A9D8F, #F4A261);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      position: relative;
+      padding: 10px 20px;
+      animation: fadeIn 1.5s ease-in-out;
+  }
+
+  .pharmacy-name::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 50%;
+      width: 50%;
+      height: 3px;
+      background: #F4A261;
+      transform: translateX(-50%);
+      border-radius: 3px;
+  }
+
+  @keyframes fadeIn {
+      from {
+          opacity: 0;
+          transform: translateY(-20px);
+      }
+      to {
+          opacity: 1;
+          transform: translateY(0);
+      }
+  }
+
+  @media screen and (max-width: 768px) {
+      .pharmacy-name {
+          font-size: 2rem;
+      }
+  }
+</style>
+<div class="app-content-header">
+  <h1 class="app-content-headerText pharmacy-name">PHARMACIE {{ parametre.name }}</h1>
+    <button class="mode-switch" title="Switch Theme">
+      <svg class="moon" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="24" height="24" viewBox="0 0 24 24">
+        <defs></defs>
+        <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+      </svg>
+    </button>
+    
+    <a href="{% url 'ajoutvente' %}" >
+      
+      <button class="app-content-headerButton"> <i class="bi bi-plus-square-fill" style="color: yellow;"> </i> Vendre  </button>
+      </a>
+    <a href="{% url 'ajout' %}">
+    <button class="app-content-headerButton"> <i class="bi bi-plus-square-fill"> </i> Ajouter un medicament</button>
+    </a>
+    
+
+  </div>
+  {% endblock header %}

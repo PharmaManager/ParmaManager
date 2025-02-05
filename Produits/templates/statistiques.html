@@ -1,0 +1,280 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+   
+    <title style="color: blue;"> SuperPharma-Rapports et Statistiques</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href=" {% static 'footer.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            background-color:#f0f4f8;
+            font-family: 'Arial', sans-serif;
+        }
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        .summary-card {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+        }
+        .bg-total {
+            background-color: #28a745;
+        }
+        .bg-products {
+            background-color: #007bff;
+        }
+        .bg-clients {
+            background-color: #ffc107;
+        }
+        .bg-stock {
+            background-color: #17a2b8;
+        }
+        .chart-container {
+            position: relative;
+            height: 50vh;
+        }
+        .table-striped {
+            background-color: #ffffff;
+        }
+        .table th, .table td {
+            padding: 10px;
+        }
+
+
+
+
+        
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Rapports et Statistiques mensuel</h1>
+    <div id="mois">
+        <p style="text-align: center; color: red;"><strong> <span id="mois-actuel"></span>  </strong></p>
+        
+    </div>
+    <!-- Résumé Global -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="summary-card bg-total">
+                <h3>Total des Ventes</h3>
+                <p>{{ total_ventes|floatformat:2 }} {{ parametre.devise }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="summary-card bg-products">
+                <h3>Total des Produits</h3>
+                <p>{{ total_produits }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="summary-card bg-clients">
+                <h3>Total des Clients</h3>
+                <p>{{ total_clients }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="summary-card bg-stock">
+                <h3>Total du Stock</h3>
+                <p>{{ stock_par_produit.count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphiques -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ventes par Produit</h5>
+                    <div class="chart-container">
+                        <canvas id="ventesProduitChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% comment %} <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Ventes par Mois</h5>
+                    <div class="chart-container">
+                        <canvas id="ventesMoisChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div> {% endcomment %}
+    </div>
+
+    <!-- Tableaux -->
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Produits Proches de l'Expiration</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Quantité</th>
+                                <th>Date d'Expiration</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for produit in produits_proches_expiration %}
+                            <tr>
+                                <td>{{ produit.produit.name }}</td>
+                                <td>{{ produit.quantite }}</td>
+                                <td>{{ produit.date_expiration }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Clients Fidèles</h5>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Total Achats</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for client in clients_fideles %}
+                            <tr>
+                                <td>{{ client.customer__name }}</td>
+                                <td>{{ client.total_achats|floatformat:2 }} {{ parametre.devise }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="footer-container">
+        <ul class="footer-list">
+            <li><a href="{% url 'acc' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+            <li><a href="{% url 'produits' %}">Stocks</a></li>
+            <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+            <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+            <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+            <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+            <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+            <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+            <li><a href="{% url 'notifications' %}">Notifications</a></li>
+            {% if is_admin %}
+            <li><a href="{% url 'admin_dashboard' %}">Administrateur</a></li>
+            {% endif %}
+
+
+        </ul>
+        <div class="footer-account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+</div>
+
+<script>
+    
+  // Données pour le graphique des ventes par produit
+const ventesParProduit = {{ ventes_par_produit|safe }};
+const ventesProduitLabels = ventesParProduit.map(item => item.produit__name);
+const ventesProduitData = ventesParProduit.map(item => item.total_quantite);
+
+// Graphique des ventes par produit
+const ctxProduit = document.getElementById('ventesProduitChart').getContext('2d');
+new Chart(ctxProduit, {
+    type: 'bar',
+    data: {
+        labels: ventesProduitLabels,
+        datasets: [{
+            label: 'Quantité vendue',
+            data: ventesProduitData,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+console.log("Ventes par Mois:", {{ ventes_par_mois|safe }});
+    console.log("Ventes par Produit:", {{ ventes_par_produit|safe }});
+
+    {% comment %} // Ventes par mois (Test avec les données correctes)
+    const ventesParMois = {{ ventes_par_mois|safe }};
+    const ventesMoisLabels = ventesParMois.map(item => item.mois);
+    const ventesMoisData = ventesParMois.map(item => item.total_ventes);
+
+    const ctxMois = document.getElementById('ventesMoisChart').getContext('2d');
+    new Chart(ctxMois, {
+        type: 'line',
+        data: {
+            labels: ventesMoisLabels,
+            datasets: [{
+                label: 'Ventes ({{ parametre.devise }})',
+                data: ventesMoisData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    }); {% endcomment %}
+   
+        
+   
+        // Fonction pour afficher le mois actuel
+ function afficherMois() {
+            const dateActuelle = new Date();
+            
+            // Affichage du mois actuel
+            const moisActuel = dateActuelle.toLocaleString('fr-FR', { month: 'long' });
+            document.getElementById('mois-actuel').textContent = moisActuel;
+        }
+
+        // Afficher le mois dès le chargement de la page
+        window.onload = afficherMois;
+  
+
+</script>
+</body>
+</html>

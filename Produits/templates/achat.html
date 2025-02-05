@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="fr" >
+<head>
+  <meta charset="UTF-8">
+ 
+  <title style="color: blue;"> SuperPharma-Achats</title>
+  <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<link rel="stylesheet" href="{% static 'bootstrap.min.css' %}" >
+<link rel="stylesheet" href="{% static 'font/fonts/bootstrap-icons.woff2' %}" >
+<link rel="stylesheet" href="{% static 'font/fonts/bootstrap-icons.woff' %}" >
+
+<link rel="stylesheet" href="{% static 'font/bootstrap-icons.scss' %}" >
+<link rel="stylesheet" href="{% static 'font/bootstrap-icons.json' %}" >
+<link rel="stylesheet" href="{% static 'font/bootstrap-icons.min.css' %}" >
+  <!-- CSS des icônes Bootstrap -->
+<link rel="stylesheet" href="{% static 'font/bootstrap-icons.css' %}" >
+
+
+
+</head>
+
+
+<body>
+    
+     <!--Zone gauche-->
+  
+     
+     {% include "zonee_gauche.html" %}
+
+                <div class="app-content">
+               
+                  {% include "header3.html" %}
+                  {% include "header2.html" %}
+
+                  {% include "produitAchat.html" %}
+
+                  {% block produit %}
+                 
+                  {% endblock produit %}
+            
+   </div>  
+ 
+
+
+    <!-- partial -->
+<script  src="{% static 'script.js' %}"></script>
+
+</body>
+
+</html>

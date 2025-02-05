@@ -1,0 +1,77 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title style="color: blue;"> SuperPharma-Historique des Bons de Commande</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="stylesheet" href="{% static 'font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'historique.css' %}">
+
+</head>
+
+<body>
+    
+
+    <header class="mb-4">
+        <a href="{% url 'creer_commande' %}">
+            <button class="app-content-headerButton">
+                <i class="fa fa-plus-square" style="color: yellow;"></i> Créer un Bon de Commande
+            </button>
+        </a>
+    <a href="{% url 'rechercher_bon_commande' %}">
+       <button class="d-flex mt-3" style="background-color: blue; color: white;" >
+        <i class="fa fa-plus-square" style="color: blue;"></i> Recherche 
+       </button> 
+    </a>
+    </header>
+
+    <main class="app-content">
+        {% include "zonee_gauche.html" %}
+        <div class="container mt-5"  style=" color: white; /* Texte blanc par défaut */
+        background-color: #343a40; /* Fond sombre pour tout le corps de la page */
+        font-family: Arial, sans-serif; /* Police de base */
+        overflow-x: auto; /* Permet le défilement horizontal si nécessaire */
+        margin: 0;
+        padding: 0;">
+            <h2 class="text-center mb-4">Historique des Bons de Commande</h2>
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>N°</th>
+                        <th>Fournisseur</th>
+                        <th>Date</th>
+                        <th>Montant Total</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for bon in commandes %}
+                        <tr>
+                            <td>{{ bon.id }}</td>
+                            <td>{{ bon.fournisseur }}</td>
+                            <td>{{ bon.date_creation|date:"d/m/Y H:i" }}</td>
+                            <td>{{ bon.total }} {{ parametre.devise }}</td>
+                            <td>
+                                <a href="{% url 'details_bon_commande' bon.id %}" class="btn btn-primary btn-sm">Détails</a>
+                                {% if is_admin %}
+                                 <a href="{% url 'supprimer_facture_commande' bon.pk %}" class="btn btn-danger"> <i class="bi bi-trash3"></i> Supprimer</a>
+                    
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun bon de commande trouvé.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </main>
+</body>
+</html>

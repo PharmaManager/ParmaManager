@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title> SuperPharma listes categorie</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'logo.ico' %}">
+    <link rel="stylesheet" href="{% static 'categorie.css' %}">
+</head>
+<body>
+{% block content %}
+<div class="container">
+    <div class="header">
+        <h2>Liste des catégories</h2>
+        <h3 style="color: red;text-align: center;"> Veillez noter que si vous supprimer une categorie, le medicament lié sera supprimer</h3>
+        <!-- Bouton Ajouter une catégorie en haut -->
+         
+        <a href="{% url 'ajouter_categorie' %}" class="btn btn-success add-category-btn">Ajouter une catégorie</a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>N°</th>
+                <th>Nom de la catégorie</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for category in categories %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ category.name }}</td>
+                <td>
+                    <a href="{% url 'category_edit' category.id %}" class="btn btn-primary btn-sm">Modifier</a>
+                    <a href="{% url 'category_delete' category.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3">Aucune catégorie disponible.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="footer">
+    <div class="footer-container">
+        <ul class="footer-list">
+            <li><a href="{% url 'acc' %}">Home</a></li>
+            <li><a href="{% url 'home' %}">Listes des Médicaments</a></li>
+            <li><a href="{% url 'produits' %}">Stocks</a></li>
+            <li><a href="{% url 'historique_ventes' %}">Historiques des ventes</a></li>
+            <li><a href="{% url 'historique_achats' %}">Historiques des Achats</a></li>
+            <li><a href="{% url 'historique_commande' %}">Bon de commande</a></li>
+            <li><a href="{% url 'historique_devis' %}">Devis</a></li>
+            <li><a href="{% url 'rapports_statistiques' %}">Rapports et Statistiques</a></li>
+            <li><a href="{% url 'parametre' %}">Paramètre</a></li>
+            <li><a href="{% url 'notifications' %}">Notifications</a></li>
+        </ul>
+        <div class="footer-account">
+            {% if user.is_authenticated %}
+                <a href="{% url 'deconnection' %}" class="logout">Deconnexion</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2025 SUPERPHARMA. Tous droits réservés.</p>
+    </div>
+</div>
+{% endblock %}
+</body>
+</html>
