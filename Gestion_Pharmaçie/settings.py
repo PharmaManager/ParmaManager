@@ -12,13 +12,12 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
-import dj_database_url
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-TEMPLATES_DIRS  = os.path.join(BASE_DIR, 'templates')
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +27,7 @@ TEMPLATES_DIRS  = os.path.join(BASE_DIR, 'templates')
 SECRET_KEY = 'django-insecure-+)mskchz@j_lfloua!3)+g&6*k417bhi%3#s%3yfsfmo&2($e$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -58,17 +57,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'utils.middleware.GlobalCompteFilterMiddleware',
     'utils.middleware.AutoLogoutMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+   
 ]
 
 ROOT_URLCONF = 'Gestion_Pharmaçie.urls'
 
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
 
 TEMPLATES = [
     {
@@ -93,15 +86,15 @@ WSGI_APPLICATION = 'Gestion_Pharmaçie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
-    'default': dj_database_url.config()
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
+# DATABASES = {
+#     'default': dj_database_url.config()
+# }
 
 
 # Password validation
@@ -139,13 +132,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
-STATIC_ROOT  = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-django_heroku.settings(locals())
+
 
 
 
@@ -156,7 +149,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'fantchewoukomiahoeke@gmail.com'  # Ton adresse email Gmail
 EMAIL_HOST_PASSWORD = 'czkd foom ssay gdnl'  # Mot de passe ou App Password de Gmail
-DEFAULT_FROM_EMAIL ='SuperPharma <fantchewoukomiahoeke@gmail.com>'
+DEFAULT_FROM_EMAIL ='PharmaManager <fantchewoukomiahoeke@gmail.com>'
 
 import os
 from dotenv import load_dotenv
